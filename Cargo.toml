@@ -1,0 +1,17 @@
+[package]
+name = "querencia-terminal"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.92"
+license = "GPL-3.0-or-later"
+publish = false
+
+[dependencies]
+# v4_10: vte4 0.10 braucht gtk::Accessible, das gtk4 0.11 erst ab v4_10 exportiert.
+gtk4 = { version = "0.11", features = ["v4_10"] }
+vte4 = "0.10"
+
+# Lokale Kopie von vte4 0.10.0 mit korrigierter Freigabe von child_setup_data
+# (siehe README, Abschnitt „Lokaler vte4-Patch“).
+[patch.crates-io]
+vte4 = { path = "vendor/vte4" }
