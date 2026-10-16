@@ -35,7 +35,8 @@ pkg-config, Rust ≥ 1.92
 
 `gtk4` steht mit dem Feature `v4_10` in `Cargo.toml`, weil `vte4` 0.10
 den Typ `gtk::Accessible` braucht, den `gtk4` 0.11 erst ab diesem Feature
-exportiert. Ohne das Feature kompiliert `vte4` nicht.
+exportiert. Ohne das Feature kompiliert `vte4` nicht. `vte4` steht mit
+dem Feature `v0_76` darin (`Terminal::set_context_menu`, VTE ≥ 0.76).
 
 ## Lokaler vte4-Patch
 
@@ -131,13 +132,37 @@ Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
 - Shell-Ende (`exit`, Ctrl+D, Signal) über `child-exited`: Der Status wird
   auf stderr protokolliert, danach schließt sich das Fenster. Mit dem
   letzten Fenster endet die Anwendung.
-- Die Tastatur verarbeitet ausschließlich VTE (keine eigenen Kürzel).
+- Die Tastatur verarbeitet VTE; eigene Kürzel gibt es nur für Kopieren
+  und Einfügen (siehe unten).
+
+## Kopieren und Einfügen (wie GNOME Terminal 2.x)
+
+- **Strg+Umschalt+C** kopiert die Markierung in die Zwischenablage
+  (CLIPBOARD). Ohne Markierung bleibt die Zwischenablage unverändert.
+- **Strg+Umschalt+V** und **Umschalt+Einfg** fügen die Zwischenablage ein.
+  VTE klammert eingefügten Text mit Bracketed Paste ein, wenn das Programm
+  im Terminal das verlangt (bash ≥ 5.1): mehrzeiliger Text läuft erst mit
+  Enter. Umschalt+Einfg liest bewusst CLIPBOARD (VTE/GNOME Terminal 2.x:
+  PRIMARY).
+- Die Kürzel gehen nie als Zeichen an die Shell. **Strg+C**, **Strg+V**,
+  Strg+D usw. bleiben unverändert Steuerzeichen.
+- Weiter von VTE: Markieren legt den Text in PRIMARY, die mittlere
+  Maustaste fügt PRIMARY ein, Strg+Einfg kopiert, Strg+Umschalt+Einfg fügt
+  ein.
+- **Kontextmenü** (Rechtsklick, Menü-Taste, Umschalt+F10; wertet ein
+  Programm die Maus aus: Umschalt+Rechtsklick): Kopieren, Einfügen,
+  Alles auswählen, im Stil der klassischen Querencia-Menüs. Kopieren ist
+  ohne Markierung, Einfügen ohne Text in der Zwischenablage ausgegraut.
+- Zwischenablage über GTK/GDK (Wayland `wl_data_device` bzw.
+  `primary_selection`), keine X11-Wege. Inhalte werden nie protokolliert;
+  `QUERENCIA_TERMINAL_DEBUG=1` meldet nur Ereignisse.
+- Isolierte GUI-Prüfung: `tools/isolierte-gui-pruefung/pruefen.sh`.
 
 Noch nicht umgesetzt:
 
 - M3.0b: Menüleiste (Datei, Bearbeiten, Ansicht, Terminal, Reiter,
-  Hilfe), Reiter, Tastenkürzel, Suche, Kopieren und Einfügen über Menüs,
-  Kontextmenü.
+  Hilfe), Reiter, weitere Tastenkürzel, Suche, weitere Einträge im
+  Kontextmenü (Neues Terminal, Reiter, Profile).
 - M3.0c: Profile, Schrift, Farbschemata, gespeicherte Einstellungen,
   `.desktop`-Datei, Desktop-Integration, Standardterminal.
 
@@ -200,6 +225,9 @@ Die Anleitung dazu steht in `docs/m3-0a-gui-abnahme.md`.
 ```
 src/main.rs    Application, App-ID
 src/window.rs  Fenster, Terminal, Scrollleiste, Reaktion auf Prozessende
+src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
+src/context_menu.rs  klassisches Kontextmenü
+tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
 src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus
 vendor/vte4/   lokale Kopie von vte4 0.10.0 mit Patch (Lizenz MIT)
 ```

@@ -1,0 +1,13 @@
+# Testwerkzeug der isolierten GUI-Prüfung: ein GTK-4-Textfeld als
+# „anderes Wayland-Programm“ (Texteditor) für Kopieren und Einfügen.
+# Kein Teil von Querencia Terminal.
+[package]
+name = "textprobe"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+gtk4 = "0.11"
+
+[workspace]

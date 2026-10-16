@@ -6,7 +6,7 @@
 use gtk4::prelude::*;
 use vte4::prelude::*;
 
-use crate::shell;
+use crate::{clipboard, context_menu, shell};
 
 const TITLE: &str = "Querencia Terminal";
 
@@ -40,6 +40,38 @@ pub fn build(app: &gtk4::Application) {
         .title(TITLE)
         .child(&content)
         .build();
+
+    // Kopieren/Einfügen: Kürzel und Kontextmenü (siehe clipboard.rs).
+    // Schwache Referenzen: Menü und Controller hängen am Terminal selbst.
+    let terminal_weak = terminal.downgrade();
+    let query_weak = terminal.downgrade();
+    let menu = context_menu::ContextMenu::new(
+        move || match query_weak.upgrade() {
+            Some(terminal) => context_menu::Availability {
+                has_selection: terminal.has_selection(),
+                clipboard_has_text: clipboard::clipboard_has_text(&terminal),
+            },
+            None => context_menu::Availability {
+                has_selection: false,
+                clipboard_has_text: false,
+            },
+        },
+        move |command| {
+            let Some(terminal) = terminal_weak.upgrade() else {
+                return;
+            };
+            match command {
+                context_menu::Command::Copy => {
+                    clipboard::copy(&terminal);
+                }
+                context_menu::Command::Paste => clipboard::paste(&terminal),
+                context_menu::Command::SelectAll => clipboard::select_all(&terminal),
+            }
+        },
+    );
+    terminal.set_context_menu(Some(menu.popover()));
+    let keyboard_menu = menu.clone();
+    clipboard::install_shortcuts(&terminal, move || keyboard_menu.opening_by_keyboard());
 
     // Shell-Ende schließt das Fenster; mit dem letzten Fenster endet die
     // Anwendung. Schwache Referenz, damit Terminal und Fenster keinen
