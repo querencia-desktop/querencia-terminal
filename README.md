@@ -173,14 +173,23 @@ Noch nicht umgesetzt:
 
 ## Prüfstand
 
-Stand 14.10.2026, gegen VTE 0.84.0 und GTK 4.22.4 der VM:
+Stand 20.10.2026 (App-ID `org.querencia.Terminal`), gegen VTE 0.84.0 und
+GTK 4.22.4 der VM:
 
-- `cargo fmt --all --check`, `cargo check --all-targets`, `cargo build`,
-  `cargo test` (11 Tests) und `cargo clippy --all-targets -- -D warnings`
-  laufen ohne Fehler, auch mit der lokalen `vte4`-Kopie.
-- Ohne Display endet das Programm mit `Failed to open display` und
-  Exit-Code 1.
-- Die Freigabe der `child_setup`-Daten ist mit isolierten Proben geprüft:
+- `cargo fmt --all --check`, `cargo build`, `cargo test` (23 Tests) und
+  `cargo clippy --all-targets -- -D warnings` laufen ohne Fehler, auch mit
+  der lokalen `vte4`-Kopie.
+- Isolierte GUI-Prüfung Kopieren/Einfügen
+  (`tools/isolierte-gui-pruefung/pruefen.sh`, Szenario A–P): 50 von 51;
+  offen ist P2 (mittlere Maustaste fügt PRIMARY ein, das ein anderes
+  Programm per `wl-copy --primary` gesetzt hat), beim Stand vor der
+  App-ID-Umstellung ebenso.
+- Isolierte Sitzung mit Panel und Desktop (`pruefen-appid.sh`): Start aus
+  dem Anwendungsmenü, Name und Symbol in Fensterliste und Titelleiste,
+  1024×768 und 1920×1080 (Belegbilder, Auswertung von Hand).
+- Stand 14.10.2026: Ohne Display endet das Programm mit
+  `Failed to open display` und Exit-Code 1.
+- Stand 14.10.2026: Die Freigabe der `child_setup`-Daten ist mit isolierten Proben geprüft:
   richtige Größe, genau ein Drop, kein Abbruch in einem fremden Thread.
   Zur Laufzeit lief das über den `Pty`-Pfad, die vier korrigierten
   Funktionen sind wörtlich gleich. `Terminal::spawn_async` selbst ist erst

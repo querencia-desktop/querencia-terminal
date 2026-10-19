@@ -23,12 +23,23 @@ import tempfile
 import time
 
 LABWC = "~/opt/labwc-0.9.8/bin/labwc"
-SESSION_LABWC_PIDS = {
-    int(p) for p in os.listdir("/proc") if p.isdigit()
-    and os.path.exists(f"/proc/{p}/exe")
-    and os.access(f"/proc/{p}/exe", os.R_OK)
-    and os.readlink(f"/proc/{p}/exe") == LABWC
-}
+
+
+def _session_labwc(pid: str) -> bool:
+    """The labwc of a real session (runtime dir /run/user/...), not the
+    isolated test compositor of another test (as in querencia-runtime HMP-10:
+    other workers' compositors may end at any time)."""
+    try:
+        if os.readlink(f"/proc/{pid}/exe") != LABWC:
+            return False
+        with open(f"/proc/{pid}/environ", "rb") as f:
+            env = f.read().split(b"\0")
+    except OSError:
+        return False
+    return any(e.startswith(b"XDG_RUNTIME_DIR=/run/user/") for e in env)
+
+
+SESSION_LABWC_PIDS = {int(p) for p in os.listdir("/proc") if p.isdigit() and _session_labwc(p)}
 
 
 def main() -> int:
@@ -93,7 +104,10 @@ def main() -> int:
     if pgid is not None:
         assert pgid != os.getpgid(0)
         for pid in SESSION_LABWC_PIDS:
-            assert os.getpgid(pid) != pgid, "Sitzungs-labwc in eigener Gruppe?!"
+            try:
+                assert os.getpgid(pid) != pgid, "Sitzungs-labwc in eigener Gruppe?!"
+            except ProcessLookupError:
+                pass  # checked again (and reported) at the end
         os.killpg(pgid, signal.SIGTERM)
         try:
             proc.wait(10)

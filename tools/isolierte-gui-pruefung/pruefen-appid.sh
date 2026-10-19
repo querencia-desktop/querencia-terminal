@@ -2,11 +2,13 @@
 # App-ID org.querencia.Terminal: isolierte Sitzung mit Panel und Desktop der
 # Live-Sitzung (nur deren Binaries, nur gelesen), den Startern aus
 # integration/vorschlag (neuer Starter + Brücke unter der alten ID) und einer
-# Kopie von desktop-symbole (nennt die alte ID). Geprüft wird: Start aus dem
-# Anwendungsmenü, Name und Symbol in Fensterliste und Titelleiste, das
-# Desktop-Symbol über die Brücke.
+# Kopie von desktop-symbole (nennt die alte ID). Das Skript liefert Belegbilder
+# (Start aus dem Anwendungsmenü, Name und Symbol in Fensterliste und
+# Titelleiste, Desktop-Symbol über die Brücke) und Protokolle; ausgewertet wird
+# von Hand. Automatisch festgehalten sind nur die gestarteten Terminal-Binaries
+# (logs/sitzung.txt) und die an GIO übergebene Desktop-ID (logs/panel.log).
 #   pruefen-appid.sh <panel> <desktop> <profil> <BREITExHÖHE> <szenario.txt> [ohne-bruecke]
-# Ergebnis und Bilder: <gui-test>/<profil>/out, Protokolle in logs/.
+# Bilder: <gui-test>/<profil>/out; Binaries, Größe, Starter: logs/ergebnis.txt.
 set -euo pipefail
 HIER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PANEL=$(realpath -e "${1:?Panel-Binary}"); DESKTOP=$(realpath -e "${2:?Desktop-Binary}")
