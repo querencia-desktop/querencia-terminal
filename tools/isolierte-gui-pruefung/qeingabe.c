@@ -23,6 +23,8 @@
 //   wait MS
 //   shot FILE         grim FILE
 //   mark TEXT         print TEXT with a timestamp (for the logs)
+//   extent W H        coordinates from now on in a W×H output (App-ID test,
+//                     as in querencia-runtime HMP-10)
 #define _GNU_SOURCE
 #include <linux/input-event-codes.h>
 #include <stdio.h>
@@ -39,7 +41,7 @@
 static struct wl_seat *seat;
 static struct zwlr_virtual_pointer_manager_v1 *pointer_manager;
 static struct zwp_virtual_keyboard_manager_v1 *keyboard_manager;
-static const unsigned W = 1280, H = 720;
+static unsigned W = 1280, H = 720;
 static double px = 640, py = 600;
 
 static void global(void *data, struct wl_registry *registry, uint32_t name,
@@ -261,6 +263,8 @@ int main(void) {
             }
         } else if (!strcmp(cmd, "wait") && sscanf(line, "%*s %ld", &ms) == 1) {
             wl_display_flush(display); sleep_ms(ms);
+        } else if (!strcmp(cmd, "extent") && sscanf(line, "%*s %lf %lf", &x, &y) == 2 && x >= 1 && y >= 1) {
+            W = (unsigned)x; H = (unsigned)y;
         } else if (!strcmp(cmd, "shot") && sscanf(line, "%*s %399s", arg) == 1) {
             wl_display_roundtrip(display); sleep_ms(150);
             char sh[512]; snprintf(sh, sizeof sh, "grim '%s'", arg);

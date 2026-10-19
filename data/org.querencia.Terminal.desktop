@@ -1,0 +1,14 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=Querencia Terminal
+GenericName=Terminal
+Comment=Die Befehlszeile verwenden
+Exec=querencia-terminal
+TryExec=querencia-terminal
+Icon=utilities-terminal
+Terminal=false
+Categories=GTK;Utility;TerminalEmulator;
+Keywords=Shell;Konsole;Befehlszeile;Terminal;
+StartupNotify=true
+StartupWMClass=org.querencia.Terminal

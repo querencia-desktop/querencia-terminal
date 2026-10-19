@@ -1,0 +1,21 @@
+extent GROESSE
+wait 800
+mark Start aus dem Anwendungsmenü
+move 40 12
+click
+wait 1500
+move 60 47
+wait 300
+click
+wait 1500
+shot OUT/01-menue-zubehoer.png
+move 250 47
+wait 300
+click
+wait 3500
+shot OUT/02-terminal-aus-menue.png
+mark Start über das Desktop-Symbol (Brücke, alte Desktop-ID)
+move 58 SYMBOLY
+dclick
+wait 3500
+shot OUT/03-zweites-terminal-ueber-desktop.png

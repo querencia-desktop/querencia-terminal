@@ -356,7 +356,7 @@ tippen clear; tippen zeige
 ziehen 0 2 33 2
 q "chord ctrl+shift c
 wait 400
-move 643 13
+move $SCHLIESSEN_X 13
 wait 300
 click
 wait 1500"

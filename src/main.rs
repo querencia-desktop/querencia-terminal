@@ -14,8 +14,9 @@ mod window;
 use gtk4::prelude::*;
 use gtk4::{gio, glib};
 
-/// Vorläufige Anwendungs-ID bis zur Festlegung des Namensraums.
-const APP_ID: &str = "org.example.Querencia.Terminal";
+/// Anwendungs-ID; zugleich Desktop-ID (`data/org.querencia.Terminal.desktop`)
+/// und `StartupWMClass`, damit Fensterliste und Titelleiste den Starter finden.
+const APP_ID: &str = "org.querencia.Terminal";
 
 fn main() -> glib::ExitCode {
     // NON_UNIQUE: Jeder Start ist ein eigener Prozess mit eigener Umgebung.
@@ -51,5 +52,20 @@ mod tests {
     #[test]
     fn app_id_is_valid() {
         assert!(gio::Application::id_is_valid(APP_ID));
+    }
+
+    /// Desktop-ID, Fensterklasse und App-ID müssen gleich sein; sonst findet
+    /// die Fensterliste den Starter (Name, Symbol) nicht.
+    #[test]
+    fn desktop_file_matches_app_id() {
+        const DESKTOP: &str = include_str!("../data/org.querencia.Terminal.desktop");
+        assert_eq!(APP_ID, "org.querencia.Terminal");
+        let wm_class = DESKTOP
+            .lines()
+            .find_map(|l| l.strip_prefix("StartupWMClass="));
+        assert_eq!(wm_class, Some(APP_ID));
+        assert!(DESKTOP.lines().any(|l| l == "Name=Querencia Terminal"));
+        assert!(DESKTOP.lines().any(|l| l == "Exec=querencia-terminal"));
+        assert!(!DESKTOP.contains("org.example"));
     }
 }

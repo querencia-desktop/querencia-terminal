@@ -5,19 +5,24 @@ set -u
 # qeingabe-Befehle; das erste Ereignis nach dem Anlegen der virtuellen
 # Tastatur ging verloren (Keymap-Wechsel), daher zuerst warten.
 q() { printf 'wait 300\n%s\n' "$1" | "$QE"; }
-# Zellmitte im Terminal (Fenster bei 0,0; Zelle 8x17 ab 1,27)
-cx() { echo $((1 + 8 * $1 + 4)); }
-cy() { echo $((27 + 17 * $1 + 8)); }
+# Zellraster im Terminal (Fenster bei 0,0): Zelle ZB x ZH ab X0,Y0. Seit der
+# Schriftänderung der VM (gemessen 20.10.2026) 9x18 ab 1,28; bis M3.0a 8x17
+# ab 1,27 (QT_ZELLE="8 17 1 27").
+read -r ZB ZH X0 Y0 <<<"${QT_ZELLE:-9 18 1 28}"
+# Schließknopf der Titelleiste (80 Spalten breit; bei 8x17: 643)
+SCHLIESSEN_X=$((643 + 80 * (ZB - 8)))
+cx() { echo $((X0 + ZB * $1 + ZB / 2)); }
+cy() { echo $((Y0 + ZH * $1 + ZH / 2)); }
 # tippen <text>: Text und Enter
 tippen() { q "type $1
 key Return
 wait 400"; }
 # ziehen <spalte1> <zeile1> <spalte2> <zeile2>: markieren mit gedrückter linker Taste
 # (Start im linken, Ende im rechten Teil der Zelle: beide Zellen gehören dazu)
-ziehen() { q "move $((1 + 8 * $1 + 1)) $(cy $2)
+ziehen() { q "move $((X0 + ZB * $1 + 1)) $(cy $2)
 wait 200
 press
-glide $((1 + 8 * $3 + 7)) $(cy $4) 400
+glide $((X0 + ZB * $3 + ZB - 1)) $(cy $4) 400
 release
 wait 300"; }
 # klippe: CLIPBOARD lesen (wl-paste über data-control, ohne Fokus)
@@ -27,10 +32,15 @@ primaer() { wl-paste -n --primary -t 'text/plain;charset=utf-8' 2>/dev/null; }
 # zeile <png> <menü-x> <zeilen-y>: "aktiv" (dunkler Text auf Menühintergrund),
 # "grau" (nur heller Text) oder "kein-menue" (kein heller Menühintergrund)
 zeile() {
-  python3 -c 'import sys; from PIL import Image
+  # GdkPixbuf (python3-gi) statt PIL: python3-pil ist auf der VM nicht mehr da
+  python3 -c 'import sys, gi
+gi.require_version("GdkPixbuf", "2.0")
+from gi.repository import GdkPixbuf
+pb = GdkPixbuf.Pixbuf.new_from_file(sys.argv[1])
+n, rs, d = pb.get_n_channels(), pb.get_rowstride(), pb.get_pixels()
 x, y = int(sys.argv[2]), int(sys.argv[3])
-im = Image.open(sys.argv[1]).convert("RGB").crop((x - 15, y - 8, x + 95, y + 8))
-lum = [sum(p) // 3 for p in im.getdata()]
+lum = [sum(d[yy * rs + xx * n:yy * rs + xx * n + 3]) // 3
+       for yy in range(y - 8, y + 8) for xx in range(x - 15, x + 95)]
 hell = sum(1 for l in lum if l >= 235) / len(lum)
 print("kein-menue" if hell < 0.6 else "aktiv" if min(lum) < 110 else "grau")' "$@"
 }

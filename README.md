@@ -6,10 +6,10 @@ GNOME 2 und MATE. Vorbild für Aussehen und Bedienung ist MATE Terminal
 portiert.
 
 **Stand: M3.0a, Entwicklungsstufe.** Das Repository ist eigenständig
-und vom Desktop-Workspace (`entwicklungs-vm`) getrennt. Eine produktive
-Integration in Querencia Desktop gibt es noch nicht: keine
-`.desktop`-Datei, keine Installation und keine Einrichtung als
-Standardterminal.
+und vom Desktop-Workspace (`entwicklungs-vm`) getrennt. Die Desktop-Datei
+liegt unter `data/org.querencia.Terminal.desktop`; eine Installation als
+Paket und eine Einrichtung als Standardterminal (`x-terminal-emulator`)
+gibt es noch nicht.
 
 ## Technik
 
@@ -107,8 +107,12 @@ nach stderr.
 
 Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
 
-- GTK4-`Application` mit der App-ID `org.example.Querencia.Terminal`
-  (vorläufig), `NON_UNIQUE`: Jeder Start ist ein eigener Prozess.
+- GTK4-`Application` mit der App-ID `org.querencia.Terminal`,
+  `NON_UNIQUE`: Jeder Start ist ein eigener Prozess. App-ID, Desktop-ID
+  (`data/org.querencia.Terminal.desktop`) und `StartupWMClass` sind
+  gleich, damit Fensterliste und Titelleiste Name und Symbol finden
+  (Test `desktop_file_matches_app_id`). Bis Oktober 2026 hieß die ID
+  `org.example.Querencia.Terminal`.
 - `ApplicationWindow` mit dem Titel „Querencia Terminal“, ohne
   Headerbar. Darin ein VTE-Terminal und eine Scrollleiste rechts, wie bei
   MATE.
@@ -164,7 +168,8 @@ Noch nicht umgesetzt:
   Hilfe), Reiter, weitere Tastenkürzel, Suche, weitere Einträge im
   Kontextmenü (Neues Terminal, Reiter, Profile).
 - M3.0c: Profile, Schrift, Farbschemata, gespeicherte Einstellungen,
-  `.desktop`-Datei, Desktop-Integration, Standardterminal.
+  Standardterminal (dafür fehlt noch `-e`/`-x` für einen Befehl statt der
+  Shell).
 
 ## Prüfstand
 
@@ -224,10 +229,13 @@ Die Anleitung dazu steht in `docs/m3-0a-gui-abnahme.md`.
 
 ```
 src/main.rs    Application, App-ID
+data/org.querencia.Terminal.desktop  Desktop-Datei (Exec ohne Pfad)
 src/window.rs  Fenster, Terminal, Scrollleiste, Reaktion auf Prozessende
 src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
 src/context_menu.rs  klassisches Kontextmenü
 tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
+integration/   App-ID-Umstellung in der Entwicklungs-VM (pruefen|aktivieren|zurueck),
+               Vorlagen, Probe; feste Pfade, nicht zur Veröffentlichung
 src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus
 vendor/vte4/   lokale Kopie von vte4 0.10.0 mit Patch (Lizenz MIT)
 ```

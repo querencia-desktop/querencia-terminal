@@ -22,6 +22,7 @@ testprofil_neu() {
         echo "testprofil: unzulässiger Profilname: '$name'" >&2; exit 2 ;;
     esac
     case $basis in
+    ~/projects/querencia-terminal-gui-test | \
     ~/projects/querencia-terminal-werkstatt/gui-test | \
     ~/.werkstatt/cache/scratch/?*) ;;
     *) echo "testprofil: kein zugelassener Testordner: $basis" >&2; exit 2 ;;
