@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Querencia Terminal. ID = Desktop-ID = App-ID org.querencia.Terminal
+     (Entscheidung 7); die alte ID steht unter <provides>, damit Kataloge den
+     Eintrag org.example.Querencia.Terminal (bis appid-0.1) zuordnen.
+     Zweisprachig von Hand (xml:lang="de"), bis i18n.py MetaInfo lesen kann.
+     Metadaten unter FSFAP, damit Kataloge sie frei übernehmen dürfen.
+     Copyright (C) 2026 Querencia Desktop contributors -->
+<component type="desktop-application">
+  <id>org.querencia.Terminal</id>
+  <name>Querencia Terminal</name>
+  <summary>Use the command line</summary>
+  <summary xml:lang="de">Die Befehlszeile verwenden</summary>
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <developer id="org.querencia">
+    <name>Querencia Desktop</name>
+  </developer>
+  <project_group>Querencia</project_group>
+  <description>
+    <p>Querencia Terminal is the terminal emulator of Querencia Desktop. It is built on VTE and offers copy and paste with Ctrl+Shift+C and Ctrl+Shift+V and a classic context menu.</p>
+    <p xml:lang="de">Querencia Terminal ist der Terminalemulator von Querencia Desktop. Er baut auf VTE auf und bietet Kopieren und Einfügen mit Strg+Umschalt+C und Strg+Umschalt+V sowie ein klassisches Kontextmenü.</p>
+  </description>
+  <url type="homepage">https://github.com/querencia-desktop/querencia-terminal</url>
+  <launchable type="desktop-id">org.querencia.Terminal.desktop</launchable>
+  <provides>
+    <binary>querencia-terminal</binary>
+    <id>org.example.Querencia.Terminal</id>
+  </provides>
+  <pkgname>querencia-terminal</pkgname>
+  <categories>
+    <category>Utility</category>
+    <category>TerminalEmulator</category>
+  </categories>
+  <keywords>
+    <keyword>shell</keyword>
+    <keyword>prompt</keyword>
+    <keyword>command line</keyword>
+    <keyword>terminal</keyword>
+    <keyword xml:lang="de">Shell</keyword>
+    <keyword xml:lang="de">Konsole</keyword>
+    <keyword xml:lang="de">Befehlszeile</keyword>
+    <keyword xml:lang="de">Terminal</keyword>
+  </keywords>
+  <content_rating type="oars-1.1"/>
+  <branding>
+    <color type="primary" scheme_preference="light">#F07746</color>
+    <color type="primary" scheme_preference="dark">#B8532B</color>
+  </branding>
+  <releases>
+    <release version="0.2.0" date="2026-10-20"/>
+    <release version="0.1.0" date="2026-10-14"/>
+  </releases>
+</component>

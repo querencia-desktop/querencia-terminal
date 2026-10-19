@@ -5,9 +5,10 @@ GNOME 2 und MATE. Vorbild für Aussehen und Bedienung ist MATE Terminal
 (Referenz: Fork `pottrauschen/mate-terminal`). Es wird kein C-Code
 portiert.
 
-**Stand: M3.0a, Entwicklungsstufe.** Das Repository ist eigenständig
-und vom Desktop-Workspace (`entwicklungs-vm`) getrennt. Die Desktop-Datei
-liegt unter `data/org.querencia.Terminal.desktop`; eine Installation als
+**Stand: 0.2.0 (M3.0a, deutsch und englisch), Entwicklungsstufe.** Das
+Repository ist eigenständig und vom Desktop-Workspace (`entwicklungs-vm`)
+getrennt. Die Desktop-Datei liegt unter `data/org.querencia.Terminal.desktop`
+(erzeugt aus `data/org.querencia.Terminal.desktop.in`); eine Installation als
 Paket und eine Einrichtung als Standardterminal (`x-terminal-emulator`)
 gibt es noch nicht.
 
@@ -18,6 +19,8 @@ gibt es noch nicht.
 - VTE für GTK 4 über `vte4` 0.10.0 (`libvte-2.91-gtk4`), als lokale,
   korrigierte Kopie unter `vendor/vte4/` (siehe „Lokaler vte4-Patch“)
 - Kein libadwaita und keine Headerbar
+- Übersetzungen über GNU gettext (`gettext-rs` 0.8 mit `gettext-system`,
+  siehe „Sprachen“)
 
 Terminalemulation, PTY, ANSI-Sequenzen, Darstellung, Tastatur und
 Scrollback übernimmt VTE. Die Anwendung baut das Fenster, startet die
@@ -103,6 +106,39 @@ Das Programm braucht eine laufende Wayland- (oder X11-)Sitzung. Meldungen
 zum Shell-Start und Prozessende gehen mit dem Präfix `querencia-terminal:`
 nach stderr.
 
+## Sprachen
+
+Seit 0.2.0 sind die Texte der Oberfläche englisch im Code (msgid) und
+deutsch in `po/de.po`, wie bei GNOME und Debian (Muster: Querencia Editor
+0.2.0, `docs/i18n-muster.md` im Editor-Repo). Übersetzt sind das
+Kontextmenü („_Kopieren“, „_Einfügen“, „Alles _auswählen“ bzw. „_Copy“,
+„_Paste“, „Select _All“, Zugriffstasten je Sprache), die Startfehler im
+Terminal und Comment/Keywords der Desktop-Datei. Nicht übersetzt sind der
+Name „Querencia Terminal“, der Fenstertitel und die Meldungen auf stderr.
+
+- Sprachwahl wie bei gettext üblich über `LANGUAGE`, `LC_ALL`,
+  `LC_MESSAGES`, `LANG`; ohne deutschen Katalog erscheint Englisch.
+  `LANGUAGE` wirkt nicht, solange die Locale `C`/`POSIX` ist.
+- Die Kataloge `<lang>/LC_MESSAGES/querencia-terminal.mo` sucht das
+  Programm in `<Ordner der Binary>/share/locale`, dann in
+  `<Ordner der Binary>/../share/locale`, zuletzt in `/usr/share/locale`;
+  `QUERENCIA_TERMINAL_LOCALEDIR` setzt den Ordner ausdrücklich.
+- po-Pflege ohne weitere Abhängigkeiten mit `werkzeug/i18n.py`
+  (`pot`, `update`, `desktop`, `mo <ziel>`, `pruefen`). Die `.mo` ist
+  inhaltsgleich mit GNU `msgfmt`, die Desktop-Datei byte-gleich mit
+  `msgfmt --desktop` (gettext 0.23.2). `xgettext` liest Rust erst ab 0.24.
+
+```
+python3 werkzeug/i18n.py pot && python3 werkzeug/i18n.py update
+python3 werkzeug/i18n.py desktop data/org.querencia.Terminal.desktop.in data/org.querencia.Terminal.desktop
+python3 werkzeug/i18n.py pruefen
+python3 werkzeug/i18n.py mo target/locale
+LANGUAGE=en QUERENCIA_TERMINAL_LOCALEDIR=target/locale cargo run
+```
+
+Der Test `german_catalog_is_complete` hält `cargo test` auch ohne Python
+ehrlich: jede msgid der `.pot` muss in `de.po` übersetzt sein.
+
 ## M3.0a – Umfang
 
 Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
@@ -173,14 +209,17 @@ Noch nicht umgesetzt:
 
 ## Prüfstand
 
-Stand 20.10.2026 (App-ID `org.querencia.Terminal`), gegen VTE 0.84.0 und
+Stand 20.10.2026 (0.2.0, deutsch und englisch), gegen VTE 0.84.0 und
 GTK 4.22.4 der VM:
 
-- `cargo fmt --all --check`, `cargo build`, `cargo test` (23 Tests) und
+- `cargo fmt --all --check`, `cargo build`, `cargo test` (28 Tests) und
   `cargo clippy --all-targets -- -D warnings` laufen ohne Fehler, auch mit
   der lokalen `vte4`-Kopie.
+- `python3 werkzeug/i18n.py pruefen`: PASS (10 Texte); `msgfmt -c`
+  fehlerfrei.
 - Isolierte GUI-Prüfung Kopieren/Einfügen
-  (`tools/isolierte-gui-pruefung/pruefen.sh`, Szenario A–P): 50 von 51;
+  (`tools/isolierte-gui-pruefung/pruefen.sh`, Szenario A–P, je mit
+  `QT_LANGUAGE=de` und `QT_LANGUAGE=en`): GUIZAHL;
   offen ist P2 (mittlere Maustaste fügt PRIMARY ein, das ein anderes
   Programm per `wl-copy --primary` gesetzt hat), beim Stand vor der
   App-ID-Umstellung ebenso.
@@ -238,17 +277,30 @@ Die Anleitung dazu steht in `docs/m3-0a-gui-abnahme.md`.
 
 ```
 src/main.rs    Application, App-ID
-data/org.querencia.Terminal.desktop  Desktop-Datei (Exec ohne Pfad)
+src/i18n.rs    gettext: Textdomäne, Katalogsuche, Platzhalter
+po/            querencia-terminal.pot, de.po, LINGUAS
+werkzeug/i18n.py     po-Pflege (pot, update, desktop, mo, pruefen)
+data/org.querencia.Terminal.desktop.in  Vorlage der Desktop-Datei (englisch)
+data/org.querencia.Terminal.desktop  Desktop-Datei mit [de] (Exec ohne Pfad)
+data/org.querencia.Terminal.metainfo.xml  AppStream-MetaInfo
 src/window.rs  Fenster, Terminal, Scrollleiste, Reaktion auf Prozessende
 src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
 src/context_menu.rs  klassisches Kontextmenü
 tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
-integration/   App-ID-Umstellung in der Entwicklungs-VM (pruefen|aktivieren|zurueck),
-               Vorlagen, Probe; feste Pfade, nicht zur Veröffentlichung
+integration/   Integration in der Entwicklungs-VM (App-ID-Umstellung,
+               0.2.0 mit Katalog; pruefen|aktivieren|zurueck), Vorlagen,
+               Probe; feste Pfade, nicht zur Veröffentlichung
 src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus
 vendor/vte4/   lokale Kopie von vte4 0.10.0 mit Patch (Lizenz MIT)
 ```
 
 ## Lizenz
 
-GPL-3.0-or-later. `vendor/vte4/` behält seine eigene MIT-Lizenz.
+GPL-3.0-or-later, siehe [LICENSE](LICENSE). Copyright 2026 Querencia
+Desktop contributors. Änderungen sind in [CHANGELOG.md](CHANGELOG.md)
+beschrieben.
+
+`vendor/vte4/` behält seine eigene MIT-Lizenz (`vendor/vte4/LICENSE`); die
+Querencia-Änderung darin ist mit „Querencia patch“ markiert und oben unter
+„Lokaler vte4-Patch“ beschrieben. Die MetaInfo-Datei steht unter FSFAP.
+

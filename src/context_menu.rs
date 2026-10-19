@@ -16,14 +16,20 @@
 //!   Text anbietet, sonst ausgegraut (wie GNOME Terminal);
 //! - Zeiger: die Zeile unter dem Zeiger ist orange hervorgehoben, ein
 //!   Klick löst sie aus; Tastatur: Auf/Ab, Pos1/Ende, Enter/Leertaste,
-//!   Escape, und die Zugriffstasten K, E, A wie in GTK-2-Menüs. Über die
-//!   Tastatur geöffnet ist die erste wählbare Zeile hervorgehoben.
+//!   Escape, und die Zugriffstasten wie in GTK-2-Menüs (deutsch K, E, A;
+//!   englisch C, P, A). Über die Tastatur geöffnet ist die erste wählbare
+//!   Zeile hervorgehoben.
+//!
+//! Die Beschriftungen kommen aus gettext mit `_` vor der Zugriffstaste
+//! („_Kopieren“); angezeigt wird der Text ohne Unterstrich wie bisher.
 
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
 use gtk4::prelude::*;
 use gtk4::{gdk, glib};
+
+use crate::i18n::gettext;
 
 /// Die Regeln der klassischen Menüs, Zeile für Zeile wie in
 /// `querencia-panel/src/main.rs` (HMP-09), damit das Terminalmenü genauso
@@ -54,37 +60,68 @@ pub enum Command {
     SelectAll,
 }
 
+impl Command {
+    /// Beschriftung mit `_` vor der Zugriffstaste, übersetzt (GNOME 2:
+    /// „_Kopieren“, „_Einfügen“, „Alles _auswählen“).
+    pub fn label(self) -> String {
+        match self {
+            // TRANSLATORS: Kontextmenü des Terminals. Die Zugriffstasten (_)
+            // der drei Zeilen müssen verschieden sein.
+            Command::Copy => gettext("_Copy"),
+            // TRANSLATORS: Kontextmenü des Terminals.
+            Command::Paste => gettext("_Paste"),
+            // TRANSLATORS: Kontextmenü des Terminals.
+            Command::SelectAll => gettext("Select _All"),
+        }
+    }
+}
+
 /// Eine Zeile des Menüs.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Item {
-    Entry {
-        label: &'static str,
-        /// Zugriffstaste (GNOME 2: „_Kopieren“, „_Einfügen“, „Alles _auswählen“).
-        mnemonic: char,
-        command: Command,
-    },
+    Entry { command: Command },
     Separator,
 }
 
 /// Die Zeilen in der Reihenfolge von GNOME Terminal 2.x.
 pub const ITEMS: [Item; 4] = [
     Item::Entry {
-        label: "Kopieren",
-        mnemonic: 'k',
         command: Command::Copy,
     },
     Item::Entry {
-        label: "Einfügen",
-        mnemonic: 'e',
         command: Command::Paste,
     },
     Item::Separator,
     Item::Entry {
-        label: "Alles auswählen",
-        mnemonic: 'a',
         command: Command::SelectAll,
     },
 ];
+
+/// Teilt eine Beschriftung in den angezeigten Text und die Zugriffstaste
+/// (klein): „Alles _auswählen“ → („Alles auswählen“, `a`). `__` steht für
+/// einen Unterstrich.
+pub fn split_mnemonic(label: &str) -> (String, Option<char>) {
+    let mut text = String::with_capacity(label.len());
+    let mut key = None;
+    let mut chars = label.chars().peekable();
+    while let Some(c) = chars.next() {
+        if c != '_' {
+            text.push(c);
+            continue;
+        }
+        match chars.next() {
+            Some('_') => text.push('_'),
+            Some(next) => {
+                if key.is_none() {
+                    key = next.to_lowercase().next();
+                }
+                text.push(next);
+            }
+            None => {}
+        }
+    }
+    (text, key)
+}
 
 /// Zustand, aus dem sich die wählbaren Zeilen ergeben.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -149,13 +186,14 @@ pub fn last(selectable: &[bool]) -> Option<usize> {
     step(selectable, None, false)
 }
 
-/// Zeile zur Zugriffstaste `ch`, wenn sie wählbar ist.
-pub fn mnemonic_row(selectable: &[bool], ch: char) -> Option<usize> {
+/// Zeile zur Zugriffstaste `ch`, wenn sie wählbar ist; `mnemonics` hat je
+/// Zeile von [`ITEMS`] die Taste aus [`split_mnemonic`].
+pub fn mnemonic_row(mnemonics: &[Option<char>], selectable: &[bool], ch: char) -> Option<usize> {
     let ch = ch.to_lowercase().next()?;
-    ITEMS.iter().enumerate().find_map(|(i, item)| match item {
-        Item::Entry { mnemonic, .. } if *mnemonic == ch && selectable[i] => Some(i),
-        _ => None,
-    })
+    mnemonics
+        .iter()
+        .zip(selectable)
+        .position(|(key, sel)| *key == Some(ch) && *sel)
 }
 
 type Run = Rc<dyn Fn(Command)>;
@@ -164,6 +202,7 @@ type Query = Rc<dyn Fn() -> Availability>;
 struct Inner {
     popover: gtk4::Popover,
     rows: Vec<Option<gtk4::Box>>,
+    mnemonics: Vec<Option<char>>,
     selectable: RefCell<Vec<bool>>,
     active: Cell<Option<usize>>,
     by_keyboard: Cell<bool>,
@@ -189,9 +228,12 @@ impl ContextMenu {
         let list = gtk4::Box::new(gtk4::Orientation::Vertical, 0);
         list.add_css_class("qmenu");
         let mut rows = Vec::new();
+        let mut mnemonics = Vec::new();
         for item in ITEMS {
             match item {
-                Item::Entry { label, .. } => {
+                Item::Entry { command } => {
+                    let (label, key) = split_mnemonic(&command.label());
+                    mnemonics.push(key);
                     let row = gtk4::Box::builder()
                         .orientation(gtk4::Orientation::Horizontal)
                         .spacing(6)
@@ -204,7 +246,7 @@ impl ContextMenu {
                     row.append(&icon);
                     row.append(
                         &gtk4::Label::builder()
-                            .label(label)
+                            .label(label.as_str())
                             .xalign(0.0)
                             .hexpand(true)
                             .build(),
@@ -215,6 +257,7 @@ impl ContextMenu {
                 Item::Separator => {
                     list.append(&gtk4::Separator::new(gtk4::Orientation::Horizontal));
                     rows.push(None);
+                    mnemonics.push(None);
                 }
             }
         }
@@ -223,6 +266,7 @@ impl ContextMenu {
         let menu = ContextMenu(Rc::new(Inner {
             popover,
             rows,
+            mnemonics,
             selectable: RefCell::new(vec![false; ITEMS.len()]),
             active: Cell::new(None),
             by_keyboard: Cell::new(false),
@@ -361,7 +405,7 @@ impl ContextMenu {
             _ => {
                 if let Some(index) = keyval
                     .to_unicode()
-                    .and_then(|ch| mnemonic_row(&selectable, ch))
+                    .and_then(|ch| mnemonic_row(&self.0.mnemonics, &selectable, ch))
                 {
                     self.activate(index);
                     return glib::Propagation::Stop;
@@ -396,7 +440,7 @@ impl ContextMenu {
         if !self.selectable().get(index).copied().unwrap_or(false) {
             return;
         }
-        let Item::Entry { command, .. } = ITEMS[index] else {
+        let Item::Entry { command } = ITEMS[index] else {
             return;
         };
         self.0.popover.popdown();
@@ -421,19 +465,41 @@ mod tests {
         clipboard_has_text: false,
     };
 
-    fn labels() -> Vec<&'static str> {
+    /// Beschriftungen ohne Katalog, also die englischen msgids.
+    fn labels() -> Vec<String> {
         ITEMS
             .iter()
             .map(|item| match item {
-                Item::Entry { label, .. } => *label,
-                Item::Separator => "---",
+                Item::Entry { command } => command.label(),
+                Item::Separator => "---".to_string(),
             })
             .collect()
     }
 
+    fn mnemonics(labels: &[&str]) -> Vec<Option<char>> {
+        labels.iter().map(|l| split_mnemonic(l).1).collect()
+    }
+
     #[test]
     fn items_in_gnome_terminal_order() {
-        assert_eq!(labels(), ["Kopieren", "Einfügen", "---", "Alles auswählen"]);
+        assert_eq!(labels(), ["_Copy", "_Paste", "---", "Select _All"]);
+    }
+
+    #[test]
+    fn mnemonic_is_split_from_the_label() {
+        assert_eq!(split_mnemonic("_Kopieren"), ("Kopieren".into(), Some('k')));
+        assert_eq!(
+            split_mnemonic("Alles _auswählen"),
+            ("Alles auswählen".into(), Some('a'))
+        );
+        assert_eq!(
+            split_mnemonic("Select _All"),
+            ("Select All".into(), Some('a'))
+        );
+        assert_eq!(split_mnemonic("_Über"), ("Über".into(), Some('ü')));
+        assert_eq!(split_mnemonic("a__b"), ("a_b".into(), None));
+        assert_eq!(split_mnemonic("ohne"), ("ohne".into(), None));
+        assert_eq!(split_mnemonic("Ende_"), ("Ende".into(), None));
     }
 
     #[test]
@@ -471,15 +537,23 @@ mod tests {
 
     #[test]
     fn mnemonics_only_for_enabled_rows() {
+        // deutsch wie bis 0.1.0
+        let de = mnemonics(&["_Kopieren", "_Einfügen", "---", "Alles _auswählen"]);
         let all = selectable(ALL);
-        assert_eq!(mnemonic_row(&all, 'k'), Some(0));
-        assert_eq!(mnemonic_row(&all, 'E'), Some(1));
-        assert_eq!(mnemonic_row(&all, 'a'), Some(3));
-        assert_eq!(mnemonic_row(&all, 'x'), None);
+        assert_eq!(mnemonic_row(&de, &all, 'k'), Some(0));
+        assert_eq!(mnemonic_row(&de, &all, 'E'), Some(1));
+        assert_eq!(mnemonic_row(&de, &all, 'a'), Some(3));
+        assert_eq!(mnemonic_row(&de, &all, 'x'), None);
         let nothing = selectable(NOTHING);
-        assert_eq!(mnemonic_row(&nothing, 'k'), None);
-        assert_eq!(mnemonic_row(&nothing, 'e'), None);
-        assert_eq!(mnemonic_row(&nothing, 'a'), Some(3));
+        assert_eq!(mnemonic_row(&de, &nothing, 'k'), None);
+        assert_eq!(mnemonic_row(&de, &nothing, 'e'), None);
+        assert_eq!(mnemonic_row(&de, &nothing, 'a'), Some(3));
+        // englisch (msgid)
+        let en: Vec<String> = labels();
+        let en = mnemonics(&en.iter().map(String::as_str).collect::<Vec<_>>());
+        assert_eq!(en, [Some('c'), Some('p'), None, Some('a')]);
+        assert_eq!(mnemonic_row(&en, &all, 'P'), Some(1));
+        assert_eq!(mnemonic_row(&en, &all, 'e'), None);
     }
 
     #[test]

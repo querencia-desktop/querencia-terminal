@@ -1,6 +1,6 @@
 [package]
 name = "querencia-terminal"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.92"
 license = "GPL-3.0-or-later"
@@ -11,6 +11,9 @@ publish = false
 gtk4 = { version = "0.11", features = ["v4_10"] }
 # v0_76: Terminal::set_context_menu (VTE ≥ 0.76; die VM hat 0.84).
 vte4 = { version = "0.10", features = ["v0_76"] }
+# Übersetzungen über GNU gettext (po/, .mo unter share/locale). Feature
+# gettext-system: das gettext der glibc statt eines mitgebauten libintl.
+gettext-rs = { version = "0.8", features = ["gettext-system"] }
 
 # Lokale Kopie von vte4 0.10.0 mit korrigierter Freigabe von child_setup_data
 # (siehe README, Abschnitt „Lokaler vte4-Patch“).

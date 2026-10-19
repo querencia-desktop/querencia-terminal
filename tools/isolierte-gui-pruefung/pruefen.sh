@@ -51,7 +51,13 @@ X
 printf '#!/bin/bash\nexport INPUTRC=%q\nexec /bin/bash --noprofile --rcfile %q -i\n' "$P/inputrc" "$P/testrc" > "$P/qshell"
 chmod +x "$P/qshell"
 echo "Terminal: $QT_BIN ($(sha256sum "$QT_BIN" | cut -c1-16))" > "$P/logs/ergebnis.txt"
-# Sprache wie die Live-Sitzung (runtime environment)
-LANG=en_US.UTF-8 LANGUAGE=de QT_BIN="$QT_BIN" QE="$G/bin/qeingabe" TEXTPROBE="$TEXTPROBE" QT_PROFIL="$P" HIER="$HIER" \
+# Sprache wie die Live-Sitzung (runtime environment): LANG=en_US.UTF-8,
+# LANGUAGE=de; QT_LANGUAGE=en prüft die englische Oberfläche. Die Kataloge
+# findet ein Binary aus target/ über QUERENCIA_TERMINAL_LOCALEDIR (falls
+# gesetzt), eines aus der Ablage über <ablage>/share/locale. QT_GROESSE
+# (z. B. 1024x768) setzt die Auflösung für Szenarien, die sie auswerten.
+echo "Sprache: LANGUAGE=${QT_LANGUAGE:-de}, Katalogordner ${QUERENCIA_TERMINAL_LOCALEDIR:-neben der Binary}" >> "$P/logs/ergebnis.txt"
+LANG=en_US.UTF-8 LANGUAGE="${QT_LANGUAGE:-de}" QT_BIN="$QT_BIN" QE="$G/bin/qeingabe" QA="$G/bin/qausgabe" \
+  QT_GROESSE="${QT_GROESSE:-}" TEXTPROBE="$TEXTPROBE" QT_PROFIL="$P" HIER="$HIER" \
   /usr/bin/python3 "$HIER/isoliert.py" "$P" "$SZ" "${4:-240}" || true
 cat "$P/logs/ergebnis.txt"

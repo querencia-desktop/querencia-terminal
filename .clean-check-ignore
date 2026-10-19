@@ -1,0 +1,20 @@
+# Ausnahmen für ai-clean/clean_check.py (Terminal 0.2.0, G2-AH, 20.10.2026).
+# Bewusst KEINE Pfadeinträge: ein Pfad schaltet für ihn alle Prüfungen ab,
+# auch security. Die begründeten Ausnahmen stehen nur als Kommentar hier:
+#
+# Doku-Standard (ENTSCHEIDUNGEN Nr. 17): CHANGELOG.md bleibt im Root
+#      (GitHub-Vorlage); CONTRIBUTING.md, SECURITY.md, MARKE.md kommen erst
+#      mit dem Vorlagen-Commit des Veröffentlichungsklons dazu und bleiben
+#      dann ebenfalls im Root. vendor/vte4/README.md ist Upstream-Datei.
+# P002 Co-Authored-By in den Commit-Texten: bleibt im Arbeitsrepo; beim
+#      Veröffentlichungsklon entfernt git filter-repo --replace-message alle
+#      Co-Authored-By-Zeilen (ENTSCHEIDUNGEN Nr. 10).
+# H003 tools/isolierte-gui-pruefung/virtual-keyboard-unstable-v1.xml: „-v1“
+#      ist die Version des Wayland-Protokolls (Upstream-Name).
+# S003 Backticks um Bezeichner in Kommentaren: rustdoc-Konvention, Projektstil.
+# S004 Typografie („“, –, …, →): deutsche Oberflächentexte, po-Kataloge und
+#      Testdaten sind Daten; die Kommentare folgen derselben Typografie
+#      (Projektstil, nicht global ersetzen). Englische msgids nutzen “ ” ’.
+# S005 englische Kommentare in isoliert.py und qeingabe.c: Kopien aus
+#      querencia-runtime, Sprache der Herkunft beibehalten; vendor/vte4
+#      ist Upstream.

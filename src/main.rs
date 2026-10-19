@@ -5,9 +5,13 @@
 //!
 //! Kopieren und Einfügen (Strg+Umschalt+C/V, Umschalt+Einfg, Kontextmenü)
 //! wie im GNOME Terminal von GNOME 2: `clipboard.rs`, `context_menu.rs`.
+//!
+//! Texte über GNU gettext, msgid englisch, Deutsch aus `po/de.po`
+//! (`i18n.rs`).
 
 mod clipboard;
 mod context_menu;
+mod i18n;
 mod shell;
 mod window;
 
@@ -19,6 +23,7 @@ use gtk4::{gio, glib};
 const APP_ID: &str = "org.querencia.Terminal";
 
 fn main() -> glib::ExitCode {
+    i18n::init();
     // NON_UNIQUE: Jeder Start ist ein eigener Prozess mit eigener Umgebung.
     // Mehrere Fenster in einer Instanz kommen erst mit M3.0b.
     let app = gtk4::Application::builder()

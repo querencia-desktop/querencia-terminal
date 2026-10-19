@@ -145,18 +145,18 @@ wait 500"
 printf 'Kontextmenü: Größe ändern\nZeile  zwei\n' > "$OUT/soll-f.txt"
 vergleich "F Kontextmenü Einfügen" "$OUT/f.txt" "$OUT/soll-f.txt"
 
-# --- F2: Menü-Taste, Zugriffstaste E
+# --- F2: Menü-Taste, Zugriffstaste von „Einfügen“ (de E, en P)
 printf 'Zugriffstaste E: Äußerst' | wl-copy
 tippen 'ziel f2'
 q "key Menu
 wait 700
-key e
+key $TASTE_EINFUEGEN
 wait 600
 key Return
 chord ctrl d
 wait 500"
 printf 'Zugriffstaste E: Äußerst\n' > "$OUT/soll-f2.txt"
-vergleich "F2 Menü-Taste + E: Einfügen" "$OUT/f2.txt" "$OUT/soll-f2.txt"
+vergleich "F2 Menü-Taste + $TASTE_EINFUEGEN: Einfügen" "$OUT/f2.txt" "$OUT/soll-f2.txt"
 
 # --- G: Umschalt+Einfg fügt CLIPBOARD ein (PRIMARY enthält etwas anderes)
 printf 'Umschalt+Einfg: ÄÖÜ äöü ß' | wl-copy

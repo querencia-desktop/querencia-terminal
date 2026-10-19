@@ -7,6 +7,8 @@ use std::path::{Path, PathBuf};
 use gtk4::{gio, glib};
 use vte4::prelude::*;
 
+use crate::i18n::{gettext, gettext_f};
+
 /// Letzter Ausweg, wenn weder `$SHELL` noch der passwd-Eintrag taugen.
 pub const FALLBACK_SHELL: &str = "/bin/sh";
 
@@ -56,7 +58,8 @@ fn is_executable_file(path: &Path) -> bool {
 /// Kindprozess selbst und meldet sein Ende über `child-exited`.
 pub fn start(terminal: &vte4::Terminal) {
     let Some(shell) = user_shell() else {
-        report_error(terminal, "keine ausführbare Shell gefunden");
+        // TRANSLATORS: steht hinter „Error:“, daher klein und ohne Punkt.
+        report_error(terminal, &gettext("no executable shell found"));
         return;
     };
     let home = glib::home_dir();
@@ -86,9 +89,15 @@ pub fn start(terminal: &vte4::Terminal) {
             Ok(pid) => eprintln!("querencia-terminal: {shell_name} läuft als PID {}", pid.0),
             Err(err) => {
                 if let Some(terminal) = terminal_weak.upgrade() {
+                    let error = err.to_string();
                     report_error(
                         &terminal,
-                        &format!("{shell_name} konnte nicht gestartet werden: {err}"),
+                        &gettext_f(
+                            // TRANSLATORS: {shell} ist der Pfad der Shell, {error} die
+                            // Meldung von GLib; steht hinter „Error:“.
+                            "{shell} could not be started: {error}",
+                            &[("shell", &shell_name), ("error", &error)],
+                        ),
                     );
                 }
             }
@@ -100,7 +109,10 @@ pub fn start(terminal: &vte4::Terminal) {
 /// bleibt offen, damit die Meldung lesbar ist.
 fn report_error(terminal: &vte4::Terminal, message: &str) {
     eprintln!("querencia-terminal: Fehler: {message}");
-    let text = format!("\x1b[1;31mFehler:\x1b[0m {message}\r\n");
+    // TRANSLATORS: rot vor der Meldung im Terminal, z. B. „Error: no
+    // executable shell found“.
+    let label = gettext("Error:");
+    let text = format!("\x1b[1;31m{label}\x1b[0m {message}\r\n");
     terminal.feed(text.as_bytes());
 }
 

@@ -1,0 +1,21 @@
+[Desktop Entry]
+# Querencia Terminal. Desktop-ID = GApplication-ID = StartupWMClass
+# org.querencia.Terminal (Entscheidung 7), damit Fensterliste und Titelleiste
+# Namen und Symbol finden.
+# Vorlage: Name, GenericName, Comment und Keywords sind englisch; die
+# Übersetzungen (Comment[de]= …) setzt `werkzeug/i18n.py desktop` aus po/*.po
+# ein (entspricht msgfmt --desktop). Erzeugt: org.querencia.Terminal.desktop.
+# Der Name „Querencia Terminal“ bleibt in allen Sprachen gleich.
+Type=Application
+Version=1.5
+Name=Querencia Terminal
+GenericName=Terminal
+Comment=Use the command line
+Exec=querencia-terminal
+TryExec=querencia-terminal
+Icon=utilities-terminal
+Terminal=false
+Categories=GTK;Utility;TerminalEmulator;
+Keywords=Shell;Prompt;Command;Command Line;Terminal;
+StartupNotify=true
+StartupWMClass=org.querencia.Terminal

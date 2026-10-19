@@ -5,6 +5,9 @@ set -u
 # qeingabe-Befehle; das erste Ereignis nach dem Anlegen der virtuellen
 # Tastatur ging verloren (Keymap-Wechsel), daher zuerst warten.
 q() { printf 'wait 300\n%s\n' "$1" | "$QE"; }
+# Zugriffstaste „Einfügen“ im Kontextmenü je Sprache (de „_Einfügen“,
+# en „_Paste“); LANGUAGE setzt pruefen.sh (QT_LANGUAGE).
+case ${LANGUAGE:-de} in en*) TASTE_EINFUEGEN=p ;; *) TASTE_EINFUEGEN=e ;; esac
 # Zellraster im Terminal (Fenster bei 0,0): Zelle ZB x ZH ab X0,Y0. Seit der
 # Schriftänderung der VM (gemessen 20.10.2026) 9x18 ab 1,28; bis M3.0a 8x17
 # ab 1,27 (QT_ZELLE="8 17 1 27").
