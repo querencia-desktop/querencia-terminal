@@ -16,6 +16,13 @@ F=1; [ "$BREITE" -gt 1280 ] && F=2
 # Koordinaten in Pixeln des Ausgangs (qeingabe rechnet sonst in 1280x720).
 qx() { q "extent $BREITE $HOEHE
 $1"; }
+# markieren wie ziehen in lib.sh, aber in Pixeln des Ausgangs
+ziehen() { qx "move $((X0 + ZB * $1 + 1)) $(cy $2)
+wait 200
+press
+glide $((X0 + ZB * $3 + ZB - 1)) $(cy $4) 400
+release
+wait 300"; }
 RX=405; RY=205
 MX=$((RX + 40)); M_KOPIEREN=$((RY + 14)); M_EINFUEGEN=$((RY + 38)); M_ALLES=$((RY + 69))
 

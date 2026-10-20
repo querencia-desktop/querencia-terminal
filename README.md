@@ -219,10 +219,14 @@ GTK 4.22.4 der VM:
   fehlerfrei.
 - Isolierte GUI-Prüfung Kopieren/Einfügen
   (`tools/isolierte-gui-pruefung/pruefen.sh`, Szenario A–P, je mit
-  `QT_LANGUAGE=de` und `QT_LANGUAGE=en`): GUIZAHL;
+  `QT_LANGUAGE=de` und `QT_LANGUAGE=en`, F2 mit der Zugriffstaste der
+  Sprache): je 50 von 51;
   offen ist P2 (mittlere Maustaste fügt PRIMARY ein, das ein anderes
   Programm per `wl-copy --primary` gesetzt hat), beim Stand vor der
   App-ID-Umstellung ebenso.
+- Sprache (`szenario-sprache.sh`, S1–S8: Katalog in `/proc/<pid>/maps`,
+  Kontextmenü, Zugriffstaste je Sprache, Startfehler): de und en, je
+  1024×768 und 1920×1080, 9 von 9 (Binary mit `share/locale` daneben).
 - Isolierte Sitzung mit Panel und Desktop (`pruefen-appid.sh`): Start aus
   dem Anwendungsmenü, Name und Symbol in Fensterliste und Titelleiste,
   1024×768 und 1920×1080 (Belegbilder, Auswertung von Hand).
