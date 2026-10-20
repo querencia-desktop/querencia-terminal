@@ -253,8 +253,7 @@ Noch nicht umgesetzt:
 
 ## Prüfstand
 
-Stand 20.10.2026 (0.3.0, Reiter): siehe
- (Entwicklungs-VM); kurz:
+Stand 20.10.2026 (0.3.0, Reiter), geprüft auf der Entwicklungs-VM:
 
 - 49 Unit-Tests (Reitermodell, Kürzel, Menüs, Zugriffstasten je Sprache,
   Einstellung, Titel, Arbeitsverzeichnis, Vordergrundprozess), fmt und
