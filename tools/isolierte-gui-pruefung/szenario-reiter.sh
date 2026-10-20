@@ -17,7 +17,12 @@ qx() { q "extent $BREITE $HOEHE
 $1"; }
 # Lage seit 0.3.0 (Titelleiste 27 px, Menüleiste bis y=53, Reiterleiste
 # bis y=87): Menüköpfe, Reiter (Breite 228 px ab x=10), freie Leiste.
-MENUE_Y=40; DATEI_X=30; BEARB_X=107; ANSICHT_X=190; REITER_X=256; HILFE_X=311
+# Menüköpfe je Sprache (Mitte der Beschriftung, gemessen 20.10.2026)
+MENUE_Y=40
+case $SPRACHE in
+en) DATEI_X=23; BEARB_X=66; ANSICHT_X=113; REITER_X=163; HILFE_X=213 ;;
+*) DATEI_X=30; BEARB_X=107; ANSICHT_X=190; REITER_X=256; HILFE_X=311 ;;
+esac
 LEISTE_Y=70
 reiter_x() { echo $((10 + 228 * $1 + 100)); }
 FREI_X=650
@@ -29,6 +34,8 @@ case $SPRACHE in en) TASTE_SCHLIESSEN=l ;; *) TASTE_SCHLIESSEN=s ;; esac
 cat > "$P/reiterrc" <<X
 . '$P/testrc'
 echo \$\$ >> "\$OUT/shells"
+# geerbtes PROMPT_COMMAND (Titel user@host) würde den Testtitel sofort ersetzen
+unset PROMPT_COMMAND
 jetzt() { echo \$\$ > "\$OUT/jetzt"; }
 titel() { printf '\\033]0;%s\\007' "\$1"; }
 X

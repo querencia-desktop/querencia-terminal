@@ -6,7 +6,8 @@
 start_terminal
 tippen 'echo $$ > $OUT/shellpid; sleep 1000 & echo $! > $OUT/sleeppid'
 sleep 0.5
-q "move 643 13
+# Schließknopf aus lib.sh (80 Spalten; 643 nur bei der alten Zelle 8x17)
+q "move $SCHLIESSEN_X 13
 wait 300
 click
 wait 2000"

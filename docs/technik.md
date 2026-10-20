@@ -253,10 +253,13 @@ Stand 20.10.2026 (0.3.0, Reiter): siehe
 - 49 Unit-Tests (Reitermodell, Kürzel, Menüs, Zugriffstasten je Sprache,
   Einstellung, Titel, Arbeitsverzeichnis, Vordergrundprozess), fmt und
   Clippy sauber, `i18n.py pruefen` PASS (61 Texte).
-- Isolierte GUI-Prüfung `szenario-reiter.sh` (R1–R19) de und en, je
-  1024×768 und 1920×1080; Regression der 0.2.0-Szenarien mit
-  `QT_ZELLE="9 18 1 54"` (das Terminal beginnt wegen der Menüleiste
-  26 px tiefer).
+- Isolierte GUI-Prüfung `szenario-reiter.sh` (R1–R19, 40 Prüfpunkte) de
+  und en, je 1024×768 und 1920×1080: je 40 von 40. Regression der
+  0.2.0-Szenarien mit `QT_ZELLE="9 18 1 54"` (das Terminal beginnt wegen
+  der Menüleiste 26 px tiefer): Sprache je 9 von 9, Kopieren/Einfügen je
+  50 von 51 (P2 wie bei 0.2.0), Schließen 3 von 3 (gleich 0.2.0;
+  `szenario-schliessen.sh` klickt jetzt `$SCHLIESSEN_X` statt der festen
+  Stelle der alten Zelle 8×17).
 
 Stand 20.10.2026 (0.2.0, deutsch und englisch), gegen VTE 0.84.0 und
 GTK 4.22.4 der VM:
