@@ -5,306 +5,39 @@ GNOME 2 und MATE. Vorbild für Aussehen und Bedienung ist MATE Terminal
 (Referenz: Fork `pottrauschen/mate-terminal`). Es wird kein C-Code
 portiert.
 
-**Stand: 0.2.0 (M3.0a, deutsch und englisch), Entwicklungsstufe.** Das
-Repository ist eigenständig und vom Desktop-Workspace (`entwicklungs-vm`)
-getrennt. Die Desktop-Datei liegt unter `data/org.querencia.Terminal.desktop`
+> **Alpha.** Entwicklungsstufe. Keine Sicherheits- oder
+> Datenverlustgarantie.
+
+Das Repository ist eigenständig und vom Desktop-Workspace getrennt. Die
+Desktop-Datei liegt unter `data/org.querencia.Terminal.desktop`
 (erzeugt aus `data/org.querencia.Terminal.desktop.in`); eine Installation als
 Paket und eine Einrichtung als Standardterminal (`x-terminal-emulator`)
 gibt es noch nicht.
 
-## Technik
+## Stand
 
-- Rust (Edition 2024, MSRV 1.92)
-- GTK 4 über `gtk4` 0.11 (Feature `v4_10`, siehe unten)
-- VTE für GTK 4 über `vte4` 0.10.0 (`libvte-2.91-gtk4`), als lokale,
-  korrigierte Kopie unter `vendor/vte4/` (siehe „Lokaler vte4-Patch“)
-- Kein libadwaita und keine Headerbar
-- Übersetzungen über GNU gettext (`gettext-rs` 0.8 mit `gettext-system`,
-  siehe „Sprachen“)
+| | |
+|---|---|
+| Version | 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`), App-ID `org.querencia.Terminal` (Tag `terminal/appid-0.1-2`) |
+| Auf der Entwicklungs-VM | live seit 20.10.2026 |
+| Letzte Prüfung | 20.10.2026: 28 Unit-Tests, `i18n.py pruefen` (10 Texte); isolierte GUI-Prüfung Kopieren/Einfügen je Sprache 50 von 51 Fällen, Sprache 9 von 9 bei 1024×768 und 1920×1080 |
+| Bekannte Lücken | P2 (mittlere Maustaste mit PRIMARY eines anderen Programms) offen; weitere in [docs/technik.md](docs/technik.md) |
+| Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22, VTE 0.84, Rust 1.93.1 |
 
-Terminalemulation, PTY, ANSI-Sequenzen, Darstellung, Tastatur und
-Scrollback übernimmt VTE. Die Anwendung baut das Fenster, startet die
-Shell und reagiert auf das Prozessende.
+Änderungen je Version: [CHANGELOG.md](CHANGELOG.md).
 
-## Voraussetzungen
+## Bauen und Prüfen
 
-Ubuntu 26.04:
-
-```
-libgtk-4-dev          (GTK ≥ 4.10; getestet mit 4.22.4)
-libvte-2.91-gtk4-dev  (VTE ≥ 0.65; Ubuntu 26.04: 0.84.0-2)
-pkg-config, Rust ≥ 1.92
-```
-
-`gtk4` steht mit dem Feature `v4_10` in `Cargo.toml`, weil `vte4` 0.10
-den Typ `gtk::Accessible` braucht, den `gtk4` 0.11 erst ab diesem Feature
-exportiert. Ohne das Feature kompiliert `vte4` nicht. `vte4` steht mit
-dem Feature `v0_76` darin (`Terminal::set_context_menu`, VTE ≥ 0.76).
-
-## Lokaler vte4-Patch
-
-`Cargo.toml` ersetzt `vte4` 0.10.0 von crates.io per `[patch.crates-io]`
-durch die Kopie unter `vendor/vte4/`. Die Versionsnummer bleibt 0.10.0.
-In `Cargo.lock` steht `vte4` deshalb ohne `source` und `checksum`.
-
-**Herkunft:** Das Archiv `vte4-0.10.0.crate` von crates.io (SHA256
-`c61732974d4915c5112a82506cdc86e19a83d786497c2c8bcd80d065825c695d`, wie
-zuvor in `Cargo.lock`) wurde unverändert entpackt. Es stammt aus
-Upstream-Commit `051bd0277bfb28b627282498d8fc6ad8e9d3a214` von
-<https://gitlab.gnome.org/World/Rust/vte4-rs> (siehe
-`vendor/vte4/.cargo_vcs_info.json`). Die Lizenz bleibt MIT
-(`vendor/vte4/LICENSE`). Geändert sind nur `src/terminal.rs` und
-`src/pty.rs`; alle übrigen Dateien entsprechen dem Archiv.
-
-**Fehler:** `spawn_async` und `spawn_with_fds_async` von `Terminal` und
-`Pty` legen die Daten für `child_setup` als
-`Box<glib::thread_guard::ThreadGuard<Q>>` an. Die zugehörige
-Freigabefunktion `child_setup_data_destroy_func` gab sie aber als `Box<Q>`
-frei. Die Folgen sind in einer Probe nachgewiesen: Bei einem Closure mit
-eingefangenen Daten liest der Drop falsche Daten und gibt mit falscher
-Größe frei (16 Byte belegt, 8 Byte freigegeben). Bei einem leeren Closure,
-wie es dieses Projekt verwendet, bleiben pro Start 8 Byte liegen. Der
-Fehler steckt auch im Upstream-Hauptzweig (Stand 08.03.2026).
-
-**Korrektur:** An allen vier Stellen wird jetzt der tatsächlich belegte
-Typ `Box<ThreadGuard<Q>>` freigegeben, und zwar nur im Eigentümerthread
-(`ThreadGuard::is_owner()`).
-
-**Grund für die Thread-Prüfung:** VTE gibt die Daten frei, wenn GLib den
-`GTask` des Spawn-Vorgangs finalisiert. Das macht der Thread, der die
-letzte Referenz abgibt, und das kann auch der Worker-Thread von GLib sein.
-In 9000 Messläufen geschah das nie, ausgeschlossen ist es aber nicht. Dort
-würde `ThreadGuard::drop()` abbrechen, innerhalb der `extern "C"`-Funktion
-wird daraus ein Prozessabbruch (SIGABRT).
-
-**Bewusst akzeptierter Speicherverlust:** Läuft die Freigabe in einem
-fremden Thread, wird die Allocation mit `std::mem::forget` absichtlich
-nicht freigegeben, und das Closure wird nicht gedroppt. Bei diesem
-Projekt sind das höchstens 8 Byte pro Shell-Start, und nur in diesem
-seltenen Fall.
-
-**Rückkehr:** Sobald eine veröffentlichte `vte4`-Version den Fehler
-nachweislich behebt, ohne den Thread-Abbruch einzuführen, entfallen
-`vendor/vte4/` und `[patch.crates-io]`, und es gilt wieder die offizielle
-Abhängigkeit. Eine Meldung an Upstream steht noch aus.
-
-Die Kopie ist kein Mitglied des Projekt-Workspace. `cargo fmt --all`
-prüft sie deshalb nicht, und Clippy wendet `-D warnings` nicht auf sie
-an. Beim Bauen erscheint eine Warnung aus dem unveränderten generierten
-Upstream-Code (`vendor/vte4/src/auto/terminal.rs:15`, unbenutzter Import
-`object::ObjectType`). Sie blockiert keine Prüfung und bleibt bewusst
-unverändert.
-
-## Bauen und Starten
-
-```
-cargo build
-cargo run
-```
-
-Das Programm braucht eine laufende Wayland- (oder X11-)Sitzung. Meldungen
-zum Shell-Start und Prozessende gehen mit dem Präfix `querencia-terminal:`
-nach stderr.
-
-## Sprachen
-
-Seit 0.2.0 sind die Texte der Oberfläche englisch im Code (msgid) und
-deutsch in `po/de.po`, wie bei GNOME und Debian (Muster: Querencia Editor
-0.2.0, `docs/i18n-muster.md` im Editor-Repo). Übersetzt sind das
-Kontextmenü („_Kopieren“, „_Einfügen“, „Alles _auswählen“ bzw. „_Copy“,
-„_Paste“, „Select _All“, Zugriffstasten je Sprache), die Startfehler im
-Terminal und Comment/Keywords der Desktop-Datei. Nicht übersetzt sind der
-Name „Querencia Terminal“, der Fenstertitel und die Meldungen auf stderr.
-
-- Sprachwahl wie bei gettext üblich über `LANGUAGE`, `LC_ALL`,
-  `LC_MESSAGES`, `LANG`; ohne deutschen Katalog erscheint Englisch.
-  `LANGUAGE` wirkt nicht, solange die Locale `C`/`POSIX` ist.
-- Die Kataloge `<lang>/LC_MESSAGES/querencia-terminal.mo` sucht das
-  Programm in `<Ordner der Binary>/share/locale`, dann in
-  `<Ordner der Binary>/../share/locale`, zuletzt in `/usr/share/locale`;
-  `QUERENCIA_TERMINAL_LOCALEDIR` setzt den Ordner ausdrücklich.
-- po-Pflege ohne weitere Abhängigkeiten mit `werkzeug/i18n.py`
-  (`pot`, `update`, `desktop`, `mo <ziel>`, `pruefen`). Die `.mo` ist
-  inhaltsgleich mit GNU `msgfmt`, die Desktop-Datei byte-gleich mit
-  `msgfmt --desktop` (gettext 0.23.2). `xgettext` liest Rust erst ab 0.24.
-
-```
-python3 werkzeug/i18n.py pot && python3 werkzeug/i18n.py update
-python3 werkzeug/i18n.py desktop data/org.querencia.Terminal.desktop.in data/org.querencia.Terminal.desktop
-python3 werkzeug/i18n.py pruefen
-python3 werkzeug/i18n.py mo target/locale
-LANGUAGE=en QUERENCIA_TERMINAL_LOCALEDIR=target/locale cargo run
-```
-
-Der Test `german_catalog_is_complete` hält `cargo test` auch ohne Python
-ehrlich: jede msgid der `.pot` muss in `de.po` übersetzt sein.
-
-## M3.0a – Umfang
-
-Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
-
-- GTK4-`Application` mit der App-ID `org.querencia.Terminal`,
-  `NON_UNIQUE`: Jeder Start ist ein eigener Prozess. App-ID, Desktop-ID
-  (`data/org.querencia.Terminal.desktop`) und `StartupWMClass` sind
-  gleich, damit Fensterliste und Titelleiste Name und Symbol finden
-  (Test `desktop_file_matches_app_id`). Bis Oktober 2026 hieß die ID
-  `org.example.Querencia.Terminal`.
-- `ApplicationWindow` mit dem Titel „Querencia Terminal“, ohne
-  Headerbar. Darin ein VTE-Terminal und eine Scrollleiste rechts, wie bei
-  MATE.
-- Anfangsgröße 80×24 Zeichen über `Terminal::set_size`; das Fenster
-  übernimmt die natürliche Größe des Terminals.
-- 10 000 Zeilen Scrollback, Sprung ans Ende bei Tastendruck.
-- Schrift und Farben: Vorgaben von VTE (keine Profile).
-- Shell-Start über `Terminal::spawn_async` (asynchron, PTY über VTE):
-  - Shell-Auswahl wie bei MATE Terminal (`egg_shell`): `$SHELL`, dann
-    die Login-Shell aus der Benutzerdatenbank (`vte_get_user_shell`, also
-    über NSS), zuletzt `/bin/sh`. Ein Kandidat zählt nur mit absolutem
-    Pfad, als reguläre Datei und mit gesetztem Ausführungsbit.
-  - argv ist eine Liste mit nur dem Shell-Pfad; es wird keine
-    Befehlszeile aus Zeichenketten zusammengesetzt und keine weitere
-    Shell aufgerufen.
-  - Das Arbeitsverzeichnis ist das Home-Verzeichnis (`g_get_home_dir`).
-  - Die Umgebung des Prozesses wird vererbt; VTE setzt `TERM`,
-    `COLORTERM`, `VTE_VERSION` und `PWD`.
-- Startfehler werden auf stderr und rot im Terminal gemeldet; das
-  Fenster bleibt dann offen.
-- Shell-Ende (`exit`, Ctrl+D, Signal) über `child-exited`: Der Status wird
-  auf stderr protokolliert, danach schließt sich das Fenster. Mit dem
-  letzten Fenster endet die Anwendung.
-- Die Tastatur verarbeitet VTE; eigene Kürzel gibt es nur für Kopieren
-  und Einfügen (siehe unten).
-
-## Kopieren und Einfügen (wie GNOME Terminal 2.x)
-
-- **Strg+Umschalt+C** kopiert die Markierung in die Zwischenablage
-  (CLIPBOARD). Ohne Markierung bleibt die Zwischenablage unverändert.
-- **Strg+Umschalt+V** und **Umschalt+Einfg** fügen die Zwischenablage ein.
-  VTE klammert eingefügten Text mit Bracketed Paste ein, wenn das Programm
-  im Terminal das verlangt (bash ≥ 5.1): mehrzeiliger Text läuft erst mit
-  Enter. Umschalt+Einfg liest bewusst CLIPBOARD (VTE/GNOME Terminal 2.x:
-  PRIMARY).
-- Die Kürzel gehen nie als Zeichen an die Shell. **Strg+C**, **Strg+V**,
-  Strg+D usw. bleiben unverändert Steuerzeichen.
-- Weiter von VTE: Markieren legt den Text in PRIMARY, die mittlere
-  Maustaste fügt PRIMARY ein, Strg+Einfg kopiert, Strg+Umschalt+Einfg fügt
-  ein.
-- **Kontextmenü** (Rechtsklick, Menü-Taste, Umschalt+F10; wertet ein
-  Programm die Maus aus: Umschalt+Rechtsklick): Kopieren, Einfügen,
-  Alles auswählen, im Stil der klassischen Querencia-Menüs. Kopieren ist
-  ohne Markierung, Einfügen ohne Text in der Zwischenablage ausgegraut.
-- Zwischenablage über GTK/GDK (Wayland `wl_data_device` bzw.
-  `primary_selection`), keine X11-Wege. Inhalte werden nie protokolliert;
-  `QUERENCIA_TERMINAL_DEBUG=1` meldet nur Ereignisse.
-- Isolierte GUI-Prüfung: `tools/isolierte-gui-pruefung/pruefen.sh`.
-
-Noch nicht umgesetzt:
-
-- M3.0b: Menüleiste (Datei, Bearbeiten, Ansicht, Terminal, Reiter,
-  Hilfe), Reiter, weitere Tastenkürzel, Suche, weitere Einträge im
-  Kontextmenü (Neues Terminal, Reiter, Profile).
-- M3.0c: Profile, Schrift, Farbschemata, gespeicherte Einstellungen,
-  Standardterminal (dafür fehlt noch `-e`/`-x` für einen Befehl statt der
-  Shell).
-
-## Prüfstand
-
-Stand 20.10.2026 (0.2.0, deutsch und englisch), gegen VTE 0.84.0 und
-GTK 4.22.4 der VM:
-
-- `cargo fmt --all --check`, `cargo build`, `cargo test` (28 Tests) und
-  `cargo clippy --all-targets -- -D warnings` laufen ohne Fehler, auch mit
-  der lokalen `vte4`-Kopie.
-- `python3 werkzeug/i18n.py pruefen`: PASS (10 Texte); `msgfmt -c`
-  fehlerfrei.
-- Isolierte GUI-Prüfung Kopieren/Einfügen
-  (`tools/isolierte-gui-pruefung/pruefen.sh`, Szenario A–P, je mit
-  `QT_LANGUAGE=de` und `QT_LANGUAGE=en`, F2 mit der Zugriffstaste der
-  Sprache): je 50 von 51;
-  offen ist P2 (mittlere Maustaste fügt PRIMARY ein, das ein anderes
-  Programm per `wl-copy --primary` gesetzt hat), beim Stand vor der
-  App-ID-Umstellung ebenso.
-- Sprache (`szenario-sprache.sh`, S1–S8: Katalog in `/proc/<pid>/maps`,
-  Kontextmenü, Zugriffstaste je Sprache, Startfehler): de und en, je
-  1024×768 und 1920×1080, 9 von 9 (Binary mit `share/locale` daneben).
-- Isolierte Sitzung mit Panel und Desktop (`pruefen-appid.sh`): Start aus
-  dem Anwendungsmenü, Name und Symbol in Fensterliste und Titelleiste,
-  1024×768 und 1920×1080 (Belegbilder, Auswertung von Hand).
-- Stand 14.10.2026: Ohne Display endet das Programm mit
-  `Failed to open display` und Exit-Code 1.
-- Stand 14.10.2026: Die Freigabe der `child_setup`-Daten ist mit isolierten Proben geprüft:
-  richtige Größe, genau ein Drop, kein Abbruch in einem fremden Thread.
-  Zur Laufzeit lief das über den `Pty`-Pfad, die vier korrigierten
-  Funktionen sind wörtlich gleich. `Terminal::spawn_async` selbst ist erst
-  mit der GUI-Abnahme zur Laufzeit geprüft.
-
-Die Funktionen an der grafischen Oberfläche sind noch nicht abgenommen.
-Die Anleitung dazu steht in `docs/m3-0a-gui-abnahme.md`.
-
-## Bekannte Einschränkungen
-
-- **Titelleiste:** GTK 4 nutzt unter Wayland Serverdekoration, wenn der
-  Compositor sie bevorzugt (labwc: KDE-Protokoll `server-decoration`).
-  Sonst zeichnet GTK seine eigene Standard-Titelleiste. Die Anwendung
-  setzt keine eigene.
-- **Fenster schließen bei laufender Shell:** keine Rückfrage. Beim
-  Schließen wird das PTY geschlossen, und der Kernel schickt der Shell
-  SIGHUP. Ob VTE zusätzlich selbst SIGHUP sendet, ist nicht geprüft.
-  Prozesse, die SIGHUP ignorieren oder abgetrennt sind (`nohup`,
-  `disown`, `setsid`), laufen weiter, wie bei anderen Terminals auch.
-- **systemd-Scope:** VTE verschiebt die Shell in einen eigenen
-  systemd-User-Scope (`vte-spawn-*.scope`). Wenn das Terminal endet, gibt
-  es deshalb keinen Abbruch über die cgroup; das Beenden hängt allein am
-  SIGHUP.
-- **Fenster sehr früh geschlossen:** Wird das Fenster geschlossen, bevor
-  der Shell-Start fertig ist, beendet VTE den neuen Prozess laut
-  Dokumentation selbst. Die Logzeile „läuft als PID“ kann dann trotzdem
-  erscheinen.
-- **Shell-Ende:** Das Fenster schließt sich immer, auch bei einem
-  Exit-Code ungleich 0. Die Option „offen halten“ (MATE `exit-action`)
-  folgt mit den Profilen.
-- **Startfehler:** nur als Textzeile im Terminal, ohne Infoleiste und ohne
-  „Neu starten“.
-- **Shell-Prüfung:** Die Ausführbarkeit wird über das Ausführungsbit
-  geprüft, nicht über `access(X_OK)` für den aktuellen Benutzer.
-- **Pfade:** Shell- und Home-Pfade müssen UTF-8 sein. Ist das
-  Home-Verzeichnis kein UTF-8, startet die Shell im aktuellen
-  Arbeitsverzeichnis des Prozesses.
-- **Home-Verzeichnis:** Fehlt das Arbeitsverzeichnis, weicht VTE selbst
-  auf `$HOME` aus. Zeigt `$HOME` auf kein vorhandenes Verzeichnis, scheitert
-  der Start mit „Failed to change to directory“, das Fenster bleibt mit
-  der Fehlermeldung offen. Belegt mit einer Probe über `vte4::Pty`, nicht
-  im Fenster.
-- **Ohne Display:** GTK bricht mit einer Meldung ab.
-
-## Struktur
-
-```
-src/main.rs    Application, App-ID
-src/i18n.rs    gettext: Textdomäne, Katalogsuche, Platzhalter
-po/            querencia-terminal.pot, de.po, LINGUAS
-werkzeug/i18n.py     po-Pflege (pot, update, desktop, mo, pruefen)
-data/org.querencia.Terminal.desktop.in  Vorlage der Desktop-Datei (englisch)
-data/org.querencia.Terminal.desktop  Desktop-Datei mit [de] (Exec ohne Pfad)
-data/org.querencia.Terminal.metainfo.xml  AppStream-MetaInfo
-src/window.rs  Fenster, Terminal, Scrollleiste, Reaktion auf Prozessende
-src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
-src/context_menu.rs  klassisches Kontextmenü
-tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
-integration/   Integration in der Entwicklungs-VM (App-ID-Umstellung,
-               0.2.0 mit Katalog; pruefen|aktivieren|zurueck), Vorlagen,
-               Probe; feste Pfade, nicht zur Veröffentlichung
-src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus
-vendor/vte4/   lokale Kopie von vte4 0.10.0 mit Patch (Lizenz MIT)
-```
+`cargo build --locked`, danach `cargo fmt --all --check`, `cargo clippy --all-targets --locked -- -D warnings`, `cargo test --locked` und `python3 werkzeug/i18n.py pruefen`.
+Voraussetzungen, lokaler vte4-Patch, Sprachen, Umfang, Prüfstand und isolierte GUI-Prüfung: [docs/technik.md](docs/technik.md); Abnahme von Hand: [docs/m3-0a-gui-abnahme.md](docs/m3-0a-gui-abnahme.md).
 
 ## Lizenz
 
-GPL-3.0-or-later, siehe [LICENSE](LICENSE). Copyright 2026 Querencia
-Desktop contributors. Änderungen sind in [CHANGELOG.md](CHANGELOG.md)
-beschrieben.
+GPL-3.0-or-later, siehe [LICENSE](LICENSE) (reiner Lizenztext). Copyright
+2026 Querencia Desktop contributors; Urheberhinweis in
+[COPYRIGHT](COPYRIGHT).
 
 `vendor/vte4/` behält seine eigene MIT-Lizenz (`vendor/vte4/LICENSE`); die
-Querencia-Änderung darin ist mit „Querencia patch“ markiert und oben unter
-„Lokaler vte4-Patch“ beschrieben. Die MetaInfo-Datei steht unter FSFAP.
+Querencia-Änderung darin ist mit „Querencia patch“ markiert und in
+[docs/technik.md](docs/technik.md) unter „Lokaler vte4-Patch“ beschrieben. Die MetaInfo-Datei steht unter FSFAP.
 

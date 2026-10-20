@@ -25,8 +25,8 @@ Das startende Terminal bleibt bis zum Ende blockiert und zeigt das Log.
 | Nr. | Aktion | Erwartung |
 |---|---|---|
 | 1 | Start wie oben | Fenster „Querencia Terminal“ mit labwc-Titelleiste, ohne GTK-Headerbar, Scrollleiste rechts |
-| 2 | Sofort tippen, ohne zu klicken | Prompt ist sichtbar, und die Eingabe kommt an. Im Log: `starte /bin/bash in ~` und `läuft als PID …`. Die PID notieren. |
-| 3 | `pwd` | `~` |
+| 2 | Sofort tippen, ohne zu klicken | Prompt ist sichtbar, und die Eingabe kommt an. Im Log: `starte /bin/bash in $HOME` (der eigene Persönliche Ordner) und `läuft als PID …`. Die PID notieren. |
+| 3 | `pwd` | der Wert von `$HOME` |
 | 4 | `echo test` | `test` |
 | 5 | `tput cols; tput lines` (vor jeder Größenänderung) | `80` und `24` |
 | 6 | `ls --color=always /usr/bin \| head` und `for i in 0 1 2 3 4 5 6 7; do printf '\e[3%sm Farbe%s \e[0m' $i $i; done; echo` | farbige Ausgabe |
