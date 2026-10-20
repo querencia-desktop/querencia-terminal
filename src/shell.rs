@@ -56,15 +56,23 @@ fn is_executable_file(path: &Path) -> bool {
 
 /// Startet die Shell asynchron im PTY des Terminals. VTE überwacht den
 /// Kindprozess selbst und meldet sein Ende über `child-exited`.
-pub fn start(terminal: &vte4::Terminal) {
+///
+/// `directory` ist das Arbeitsverzeichnis (neuer Reiter: das des aktuellen
+/// Reiters); ohne oder wenn es kein Ordner mehr ist, der persönliche Ordner.
+/// `started` erfährt die PID der Shell.
+pub fn start(
+    terminal: &vte4::Terminal,
+    directory: Option<&Path>,
+    started: impl FnOnce(i32) + 'static,
+) {
     let Some(shell) = user_shell() else {
         // TRANSLATORS: steht hinter „Error:“, daher klein und ohne Punkt.
         report_error(terminal, &gettext("no executable shell found"));
         return;
     };
-    let home = glib::home_dir();
+    let dir = working_directory(directory, &glib::home_dir());
     // Ohne UTF-8-Pfad übernimmt VTE das Arbeitsverzeichnis des Prozesses.
-    let cwd = home.to_str();
+    let cwd = dir.to_str();
     eprintln!(
         "querencia-terminal: starte {shell} in {}",
         cwd.unwrap_or("(Arbeitsverzeichnis des Prozesses)")
@@ -86,7 +94,10 @@ pub fn start(terminal: &vte4::Terminal) {
         -1,
         gio::Cancellable::NONE,
         move |result| match result {
-            Ok(pid) => eprintln!("querencia-terminal: {shell_name} läuft als PID {}", pid.0),
+            Ok(pid) => {
+                eprintln!("querencia-terminal: {shell_name} läuft als PID {}", pid.0);
+                started(pid.0);
+            }
             Err(err) => {
                 if let Some(terminal) = terminal_weak.upgrade() {
                     let error = err.to_string();
@@ -103,6 +114,15 @@ pub fn start(terminal: &vte4::Terminal) {
             }
         },
     );
+}
+
+/// Arbeitsverzeichnis der neuen Shell: `wanted`, wenn es ein Ordner ist,
+/// sonst `home`.
+pub fn working_directory(wanted: Option<&Path>, home: &Path) -> PathBuf {
+    match wanted {
+        Some(dir) if dir.is_absolute() && dir.is_dir() => dir.to_path_buf(),
+        _ => home.to_path_buf(),
+    }
 }
 
 /// Meldet einen Startfehler auf stderr und im Terminal selbst. Das Fenster
@@ -197,6 +217,28 @@ mod tests {
         assert!(is_executable_file(Path::new(FALLBACK_SHELL)));
         assert!(!is_executable_file(Path::new("/etc/passwd")));
         assert!(!is_executable_file(Path::new("/bin")));
+    }
+
+    #[test]
+    fn working_directory_falls_back_to_home() {
+        let home = Path::new("/home/x");
+        assert_eq!(
+            working_directory(Some(Path::new("/tmp")), home),
+            PathBuf::from("/tmp")
+        );
+        assert_eq!(working_directory(None, home), PathBuf::from("/home/x"));
+        assert_eq!(
+            working_directory(Some(Path::new("/nicht/vorhanden")), home),
+            PathBuf::from("/home/x")
+        );
+        assert_eq!(
+            working_directory(Some(Path::new("/etc/passwd")), home),
+            PathBuf::from("/home/x")
+        );
+        assert_eq!(
+            working_directory(Some(Path::new("tmp")), home),
+            PathBuf::from("/home/x")
+        );
     }
 
     #[test]

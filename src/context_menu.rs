@@ -11,13 +11,15 @@
 //! Regeln wie die Menüs von Panel und Desktop (`querencia-menu`,
 //! `qmenu-item`, `qmenu-active`; siehe [`MENU_CSS`]):
 //!
-//! - Kopieren, Einfügen, Trennlinie, Alles auswählen;
+//! - Kopieren, Einfügen, Trennlinie, Alles auswählen, Trennlinie, Neuer
+//!   Reiter, Reiter schließen (die Reiterzeilen kamen mit 0.3.0 unten
+//!   dazu, damit die bisherigen Zeilen an ihrem Platz bleiben);
 //! - Kopieren nur mit Markierung, Einfügen nur, wenn die Zwischenablage
 //!   Text anbietet, sonst ausgegraut (wie GNOME Terminal);
 //! - Zeiger: die Zeile unter dem Zeiger ist orange hervorgehoben, ein
 //!   Klick löst sie aus; Tastatur: Auf/Ab, Pos1/Ende, Enter/Leertaste,
-//!   Escape, und die Zugriffstasten wie in GTK-2-Menüs (deutsch K, E, A;
-//!   englisch C, P, A). Über die Tastatur geöffnet ist die erste wählbare
+//!   Escape, und die Zugriffstasten wie in GTK-2-Menüs (deutsch K, E, A,
+//!   R, S; englisch C, P, A, T, L). Über die Tastatur geöffnet ist die erste wählbare
 //!   Zeile hervorgehoben.
 //!
 //! Die Beschriftungen kommen aus gettext mit `_` vor der Zugriffstaste
@@ -58,6 +60,8 @@ pub enum Command {
     Copy,
     Paste,
     SelectAll,
+    NewTab,
+    CloseTab,
 }
 
 impl Command {
@@ -72,6 +76,12 @@ impl Command {
             Command::Paste => gettext("_Paste"),
             // TRANSLATORS: Kontextmenü des Terminals.
             Command::SelectAll => gettext("Select _All"),
+            // TRANSLATORS: Kontextmenü und Menü „Datei“; die Zugriffstaste
+            // darf im Kontextmenü nicht mit Kopieren/Einfügen/Alles
+            // auswählen zusammenfallen.
+            Command::NewTab => gettext("New _Tab"),
+            // TRANSLATORS: Kontextmenü und Menü „Datei“ (wie „New _Tab“).
+            Command::CloseTab => gettext("C_lose Tab"),
         }
     }
 }
@@ -83,8 +93,9 @@ pub enum Item {
     Separator,
 }
 
-/// Die Zeilen in der Reihenfolge von GNOME Terminal 2.x.
-pub const ITEMS: [Item; 4] = [
+/// Die Zeilen in der Reihenfolge von GNOME Terminal 2.x, die Reiterzeilen
+/// unten.
+pub const ITEMS: [Item; 7] = [
     Item::Entry {
         command: Command::Copy,
     },
@@ -94,6 +105,13 @@ pub const ITEMS: [Item; 4] = [
     Item::Separator,
     Item::Entry {
         command: Command::SelectAll,
+    },
+    Item::Separator,
+    Item::Entry {
+        command: Command::NewTab,
+    },
+    Item::Entry {
+        command: Command::CloseTab,
     },
 ];
 
@@ -135,7 +153,7 @@ pub fn enabled(command: Command, available: Availability) -> bool {
     match command {
         Command::Copy => available.has_selection,
         Command::Paste => available.clipboard_has_text,
-        Command::SelectAll => true,
+        Command::SelectAll | Command::NewTab | Command::CloseTab => true,
     }
 }
 
@@ -482,7 +500,18 @@ mod tests {
 
     #[test]
     fn items_in_gnome_terminal_order() {
-        assert_eq!(labels(), ["_Copy", "_Paste", "---", "Select _All"]);
+        assert_eq!(
+            labels(),
+            [
+                "_Copy",
+                "_Paste",
+                "---",
+                "Select _All",
+                "---",
+                "New _Tab",
+                "C_lose Tab"
+            ]
+        );
     }
 
     #[test]
@@ -504,18 +533,30 @@ mod tests {
 
     #[test]
     fn copy_needs_selection_and_paste_needs_text() {
-        assert_eq!(selectable(ALL), [true, true, false, true]);
-        assert_eq!(selectable(NOTHING), [false, false, false, true]);
+        assert_eq!(
+            selectable(ALL),
+            [true, true, false, true, false, true, true]
+        );
+        assert_eq!(
+            selectable(NOTHING),
+            [false, false, false, true, false, true, true]
+        );
         let only_selection = Availability {
             has_selection: true,
             clipboard_has_text: false,
         };
-        assert_eq!(selectable(only_selection), [true, false, false, true]);
+        assert_eq!(
+            selectable(only_selection),
+            [true, false, false, true, false, true, true]
+        );
         let only_text = Availability {
             has_selection: false,
             clipboard_has_text: true,
         };
-        assert_eq!(selectable(only_text), [false, true, false, true]);
+        assert_eq!(
+            selectable(only_text),
+            [false, true, false, true, false, true, true]
+        );
     }
 
     #[test]
@@ -524,13 +565,15 @@ mod tests {
         assert_eq!(step(&all, None, true), Some(0));
         assert_eq!(step(&all, Some(0), true), Some(1));
         assert_eq!(step(&all, Some(1), true), Some(3));
-        assert_eq!(step(&all, Some(3), true), Some(0));
-        assert_eq!(step(&all, Some(0), false), Some(3));
-        assert_eq!(step(&all, None, false), Some(3));
+        assert_eq!(step(&all, Some(3), true), Some(5));
+        assert_eq!(step(&all, Some(6), true), Some(0));
+        assert_eq!(step(&all, Some(0), false), Some(6));
+        assert_eq!(step(&all, None, false), Some(6));
         let nothing = selectable(NOTHING);
         assert_eq!(first(&nothing), Some(3));
-        assert_eq!(step(&nothing, Some(3), true), Some(3));
-        assert_eq!(last(&nothing), Some(3));
+        assert_eq!(step(&nothing, Some(3), true), Some(5));
+        assert_eq!(step(&nothing, Some(6), true), Some(3));
+        assert_eq!(last(&nothing), Some(6));
         assert_eq!(step(&[false, false], None, true), None);
         assert_eq!(step(&[], None, true), None);
     }
@@ -538,11 +581,21 @@ mod tests {
     #[test]
     fn mnemonics_only_for_enabled_rows() {
         // deutsch wie bis 0.1.0
-        let de = mnemonics(&["_Kopieren", "_Einfügen", "---", "Alles _auswählen"]);
+        let de = mnemonics(&[
+            "_Kopieren",
+            "_Einfügen",
+            "---",
+            "Alles _auswählen",
+            "---",
+            "Neuer _Reiter",
+            "Reiter _schließen",
+        ]);
         let all = selectable(ALL);
         assert_eq!(mnemonic_row(&de, &all, 'k'), Some(0));
         assert_eq!(mnemonic_row(&de, &all, 'E'), Some(1));
         assert_eq!(mnemonic_row(&de, &all, 'a'), Some(3));
+        assert_eq!(mnemonic_row(&de, &all, 'r'), Some(5));
+        assert_eq!(mnemonic_row(&de, &all, 's'), Some(6));
         assert_eq!(mnemonic_row(&de, &all, 'x'), None);
         let nothing = selectable(NOTHING);
         assert_eq!(mnemonic_row(&de, &nothing, 'k'), None);
@@ -551,7 +604,18 @@ mod tests {
         // englisch (msgid)
         let en: Vec<String> = labels();
         let en = mnemonics(&en.iter().map(String::as_str).collect::<Vec<_>>());
-        assert_eq!(en, [Some('c'), Some('p'), None, Some('a')]);
+        assert_eq!(
+            en,
+            [
+                Some('c'),
+                Some('p'),
+                None,
+                Some('a'),
+                None,
+                Some('t'),
+                Some('l')
+            ]
+        );
         assert_eq!(mnemonic_row(&en, &all, 'P'), Some(1));
         assert_eq!(mnemonic_row(&en, &all, 'e'), None);
     }

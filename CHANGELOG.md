@@ -1,5 +1,41 @@
 # Änderungen
 
+## 0.3.0 – 2026-10-20
+
+Reiter wie im GNOME Terminal 2.x (Anlass: Werkstatt QREL-06 A4.4, QD-079):
+
+- Reiterleiste ab dem zweiten Reiter; Ansicht → „Reiterleiste immer
+  anzeigen“ zeigt sie auch mit einem Reiter (gespeichert in
+  `~/.config/querencia/terminal.ini`, `[Reiter] Leiste=automatisch|immer`).
+- Strg+Umschalt+T neuer Reiter, Strg+Umschalt+W Reiter schließen,
+  Strg+Umschalt+Q Fenster schließen, Strg+Bild auf/ab vorheriger/nächster
+  Reiter, Strg+Umschalt+Bild auf/ab Reiter verschieben, Alt+1 … Alt+9
+  Reiter direkt. Wie bei GNOME Terminal 2.x ohne Umlauf an den Enden; ist
+  ein Befehl gerade nicht möglich (z. B. mit nur einem Reiter), geht die
+  Taste an die Shell.
+- Mittelklick auf einen Reiter schließt ihn, Doppelklick auf die freie
+  Reiterleiste öffnet einen neuen, Reiter mit der Maus verschiebbar,
+  Schließknopf je Reiter.
+- Reitertitel aus dem Fenstertitel der Shell; ohne Titel „Terminal“. Der
+  Fenstertitel bleibt „Querencia Terminal“.
+- Neue Reiter beginnen im Arbeitsverzeichnis des aktuellen (VTE
+  `current-directory-uri`, sonst `/proc/<shell>/cwd`).
+- Nachfrage beim Schließen, wenn in einem Reiter außer der Shell noch ein
+  Programm im Vordergrund läuft („Dieses Terminal schließen?“ bzw. „Dieses
+  Fenster schließen?“). Hintergrundjobs zählen nicht. Bis 0.2.0 schloss
+  das Fenster ohne Frage. Der letzte Reiter schließt das Fenster.
+- Menüleiste Datei | Bearbeiten | Ansicht | Reiter | Hilfe mit
+  „Neuer Reiter“, „Reiter schließen“, „Fenster schließen“, Kopieren,
+  Einfügen, Alles auswählen, Reiterleiste, Vorheriger/Nächster Reiter,
+  Reiter nach links/rechts verschieben, Tastenkürzel, Info. F10 und
+  Alt+Buchstabe bleiben bei der Shell (Midnight Commander, readline).
+- Kontextmenü mit „Neuer Reiter“ und „Reiter schließen“ unter den
+  bisherigen Zeilen (Zugriffstasten deutsch R, S; englisch T, L).
+- Hilfe → Tastenkürzel listet alle Kürzel.
+- 51 neue Texte englisch/deutsch (61 insgesamt).
+- Isolierte GUI-Prüfung: `szenario-reiter.sh` (R1–R19), `qeingabe` kennt
+  Bild auf/ab.
+
 ## 0.2.0 – 2026-10-20
 
 Englisch und Deutsch über GNU gettext (G2-AH, Muster Querencia Editor 0.2.0):

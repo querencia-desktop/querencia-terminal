@@ -144,8 +144,9 @@ Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
   (Test `desktop_file_matches_app_id`). Bis Oktober 2026 hieß die ID
   `org.example.Querencia.Terminal`.
 - `ApplicationWindow` mit dem Titel „Querencia Terminal“, ohne
-  Headerbar. Darin ein VTE-Terminal und eine Scrollleiste rechts, wie bei
-  MATE.
+  Headerbar. Darin (seit 0.3.0) Menüleiste und Reiter, je Reiter ein
+  VTE-Terminal und eine Scrollleiste rechts, wie bei MATE (siehe
+  „Reiter“).
 - Anfangsgröße 80×24 Zeichen über `Terminal::set_size`; das Fenster
   übernimmt die natürliche Größe des Terminals.
 - 10 000 Zeilen Scrollback, Sprung ans Ende bei Tastendruck.
@@ -158,16 +159,17 @@ Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
   - argv ist eine Liste mit nur dem Shell-Pfad; es wird keine
     Befehlszeile aus Zeichenketten zusammengesetzt und keine weitere
     Shell aufgerufen.
-  - Das Arbeitsverzeichnis ist das Home-Verzeichnis (`g_get_home_dir`).
+  - Das Arbeitsverzeichnis ist das Home-Verzeichnis (`g_get_home_dir`),
+    bei einem neuen Reiter das des aktuellen Reiters.
   - Die Umgebung des Prozesses wird vererbt; VTE setzt `TERM`,
     `COLORTERM`, `VTE_VERSION` und `PWD`.
 - Startfehler werden auf stderr und rot im Terminal gemeldet; das
   Fenster bleibt dann offen.
 - Shell-Ende (`exit`, Ctrl+D, Signal) über `child-exited`: Der Status wird
-  auf stderr protokolliert, danach schließt sich das Fenster. Mit dem
-  letzten Fenster endet die Anwendung.
-- Die Tastatur verarbeitet VTE; eigene Kürzel gibt es nur für Kopieren
-  und Einfügen (siehe unten).
+  auf stderr protokolliert, danach schließt sich der Reiter, mit dem
+  letzten Reiter das Fenster. Mit dem letzten Fenster endet die Anwendung.
+- Die Tastatur verarbeitet VTE; eigene Kürzel gibt es nur für Kopieren,
+  Einfügen und die Reiter (siehe unten).
 
 ## Kopieren und Einfügen (wie GNOME Terminal 2.x)
 
@@ -192,16 +194,69 @@ Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
   `QUERENCIA_TERMINAL_DEBUG=1` meldet nur Ereignisse.
 - Isolierte GUI-Prüfung: `tools/isolierte-gui-pruefung/pruefen.sh`.
 
+## Reiter (0.3.0, wie GNOME Terminal 2.x)
+
+- **Reiterleiste** ab dem zweiten Reiter; Ansicht → „Reiterleiste immer
+  anzeigen“ zeigt sie auch mit einem Reiter. Gespeichert beim Umschalten
+  in `$XDG_CONFIG_HOME/querencia/terminal.ini` (`[Reiter]
+  Leiste=automatisch|immer`, Vorgabe automatisch); andere Gruppen bleiben
+  erhalten.
+- **Kürzel** (Fenster, Capture-Phase vor VTE, `tabs.rs`):
+  Strg+Umschalt+T neuer Reiter, Strg+Umschalt+W Reiter schließen,
+  Strg+Umschalt+Q Fenster schließen, Strg+Bild auf/ab vorheriger/nächster
+  Reiter, Strg+Umschalt+Bild auf/ab Reiter nach links/rechts, Alt+1 …
+  Alt+9 Reiter 1 … 9. Wie bei den gesperrten Aktionen von GNOME Terminal
+  2.x greift ein Kürzel nur, wenn sein Befehl möglich ist; sonst geht die
+  Taste an die Shell (kein Umlauf am ersten und letzten Reiter; mit einem
+  Reiter bekommt die Shell Strg+Bild auf/ab und Alt+Ziffer).
+- **Maus:** Mittelklick auf einen Reiter schließt ihn, Doppelklick auf
+  die freie Reiterleiste öffnet einen neuen, Ziehen verschiebt Reiter,
+  Schließknopf je Reiter. Reiter sind 20 Zeichen breit, damit rechts
+  Platz für den Doppelklick bleibt.
+- **Titel** aus dem Fenstertitel der Shell (OSC 0/2, VTE
+  `window-title-changed`), ohne Titel „Terminal“; der Fenstertitel bleibt
+  „Querencia Terminal“.
+- **Arbeitsverzeichnis** neuer Reiter: `current-directory-uri` des
+  aktuellen Reiters (OSC 7, nur Pfade dieses Rechners), sonst
+  `/proc/<shell>/cwd`, sonst das Home-Verzeichnis.
+- **Nachfrage beim Schließen**, wenn in einem Reiter außer der Shell ein
+  Programm im Vordergrund läuft (Feld `tpgid` in `/proc/<shell>/stat` ≠
+  Shell-PID, wie GNOME Terminal 2.x): Reiter bzw. Fenster mit einem Reiter
+  „Dieses Terminal schließen?“, Fenster mit mehreren Reitern „Dieses
+  Fenster schließen?“; vorgewählt ist „Abbrechen“. Hintergrundjobs zählen
+  nicht. Dialoge werden jedes Mal neu gebaut (QD-076).
+- **Menüleiste** Datei | Bearbeiten | Ansicht | Reiter | Hilfe
+  (`menus.rs`), Kürzel nur als Anzeige im Menü. F10 und Alt+Buchstabe
+  öffnen sie nicht (`handle-menubar-accel` aus, Menüköpfe ohne
+  Zugriffstaste), damit Midnight Commander, htop und readline die Tasten
+  behalten; in geöffneten Menüs gelten die Zugriffstasten. Nach einem
+  Menüeintrag oder Dialog geht der Fokus zurück ins Terminal.
+- **Kontextmenü** zusätzlich „Neuer Reiter“ und „Reiter schließen“ unter
+  den bisherigen Zeilen.
+- **Hilfe → Tastenkürzel** listet alle Kürzel; Hilfe → Info nennt
+  Version und Lizenz.
+
 Noch nicht umgesetzt:
 
-- M3.0b: Menüleiste (Datei, Bearbeiten, Ansicht, Terminal, Reiter,
-  Hilfe), Reiter, weitere Tastenkürzel, Suche, weitere Einträge im
-  Kontextmenü (Neues Terminal, Reiter, Profile).
+- M3.0b: Menü „Terminal“, „Neues Fenster“, Reiter in ein anderes Fenster
+  ziehen, Reiterliste im Menü „Reiter“, Suche, Menüleiste ausblenden,
+  Zugriffstasten der Menüleiste einschaltbar, Profile im Kontextmenü.
 - M3.0c: Profile, Schrift, Farbschemata, gespeicherte Einstellungen,
   Standardterminal (dafür fehlt noch `-e`/`-x` für einen Befehl statt der
   Shell).
 
 ## Prüfstand
+
+Stand 20.10.2026 (0.3.0, Reiter): siehe
+ (Entwicklungs-VM); kurz:
+
+- 49 Unit-Tests (Reitermodell, Kürzel, Menüs, Zugriffstasten je Sprache,
+  Einstellung, Titel, Arbeitsverzeichnis, Vordergrundprozess), fmt und
+  Clippy sauber, `i18n.py pruefen` PASS (61 Texte).
+- Isolierte GUI-Prüfung `szenario-reiter.sh` (R1–R19) de und en, je
+  1024×768 und 1920×1080; Regression der 0.2.0-Szenarien mit
+  `QT_ZELLE="9 18 1 54"` (das Terminal beginnt wegen der Menüleiste
+  26 px tiefer).
 
 Stand 20.10.2026 (0.2.0, deutsch und englisch), gegen VTE 0.84.0 und
 GTK 4.22.4 der VM:
@@ -241,9 +296,9 @@ Die Anleitung dazu steht in [m3-0a-gui-abnahme.md](m3-0a-gui-abnahme.md).
   Compositor sie bevorzugt (labwc: KDE-Protokoll `server-decoration`).
   Sonst zeichnet GTK seine eigene Standard-Titelleiste. Die Anwendung
   setzt keine eigene.
-- **Fenster schließen bei laufender Shell:** keine Rückfrage. Beim
-  Schließen wird das PTY geschlossen, und der Kernel schickt der Shell
-  SIGHUP. Ob VTE zusätzlich selbst SIGHUP sendet, ist nicht geprüft.
+- **Fenster schließen bei laufender Shell:** Rückfrage nur, wenn ein
+  Programm im Vordergrund läuft (siehe „Reiter“). Beim Schließen wird das
+  PTY geschlossen, und der Kernel schickt der Shell SIGHUP. Ob VTE zusätzlich selbst SIGHUP sendet, ist nicht geprüft.
   Prozesse, die SIGHUP ignorieren oder abgetrennt sind (`nohup`,
   `disown`, `setsid`), laufen weiter, wie bei anderen Terminals auch.
 - **systemd-Scope:** VTE verschiebt die Shell in einen eigenen
@@ -274,20 +329,23 @@ Die Anleitung dazu steht in [m3-0a-gui-abnahme.md](m3-0a-gui-abnahme.md).
 ## Struktur
 
 ```
-src/main.rs    Application, App-ID
+src/main.rs    Application, App-ID, Stil
+src/tabs.rs    Reitermodell: Befehle, Kürzel, Leiste, Titel, Arbeitsverzeichnis, Vordergrundprozess
+src/menus.rs   Menüleiste (Datei, Bearbeiten, Ansicht, Reiter, Hilfe)
+src/dialogs.rs Nachfrage beim Schließen, Tastenkürzel, Info
 src/i18n.rs    gettext: Textdomäne, Katalogsuche, Platzhalter
 po/            querencia-terminal.pot, de.po, LINGUAS
 werkzeug/i18n.py     po-Pflege (pot, update, desktop, mo, pruefen)
 data/org.querencia.Terminal.desktop.in  Vorlage der Desktop-Datei (englisch)
 data/org.querencia.Terminal.desktop  Desktop-Datei mit [de] (Exec ohne Pfad)
 data/org.querencia.Terminal.metainfo.xml  AppStream-MetaInfo
-src/window.rs  Fenster, Terminal, Scrollleiste, Reaktion auf Prozessende
+src/window.rs  Fenster, Reiter (Notebook), Aktionen, Maus auf der Leiste, Prozessende
 src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
 src/context_menu.rs  klassisches Kontextmenü
 tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
 integration/   Integration in der Entwicklungs-VM (App-ID-Umstellung,
-               0.2.0 mit Katalog; pruefen|aktivieren|zurueck), Vorlagen,
-               Probe; feste Pfade, nicht zur Veröffentlichung
+               0.2.0 mit Katalog, 0.3.0 Reiter; pruefen|aktivieren|zurueck),
+               Vorlagen, Probe; feste Pfade, nicht zur Veröffentlichung
 src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus
 vendor/vte4/   lokale Kopie von vte4 0.10.0 mit Patch (Lizenz MIT)
 ```

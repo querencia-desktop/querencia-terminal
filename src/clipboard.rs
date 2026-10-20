@@ -159,14 +159,19 @@ pub fn install_shortcuts(terminal: &vte4::Terminal, on_menu_key: impl Fn() + 'st
     terminal.add_controller(keys);
 }
 
-/// `QUERENCIA_TERMINAL_DEBUG=1`: Ereignisse auf stderr, nie Inhalte.
+/// `QUERENCIA_TERMINAL_DEBUG=1`: Ereignisse mit Uhrzeit auf stderr (für die
+/// isolierten Prüfläufe), nie Inhalte.
 pub fn debugging() -> bool {
     std::env::var_os("QUERENCIA_TERMINAL_DEBUG").is_some_and(|v| v == "1")
 }
 
 pub fn debug(message: &str) {
     if debugging() {
-        eprintln!("querencia-terminal: {message}");
+        let t = glib::DateTime::now_local()
+            .ok()
+            .and_then(|d| d.format("%T.%f").ok())
+            .unwrap_or_default();
+        eprintln!("querencia-terminal: {t} {message}");
     }
 }
 

@@ -15,7 +15,8 @@
 //   run CMD           start CMD in the background (test windows, HMP-06)
 //   scroll N          N wheel notches, positive = down (HMP-07)
 //   key NAME          Escape Down Up Left Right Return Insert F10 Menu
-//                     Home End BackSpace, or one letter/digit (de layout)
+//                     Home End BackSpace Page_Up Page_Down, or one
+//                     letter/digit (de layout)
 //   chord MODS NAME   e.g. "chord ctrl+shift c", "chord shift Insert",
 //                     "chord ctrl c": modifiers down, key, all up again
 //   press / release   left button down / up (drag = press, glide, release)
@@ -107,7 +108,7 @@ static int named_key(const char *name) {
         {"Right", KEY_RIGHT}, {"Return", KEY_ENTER}, {"Tab", KEY_TAB}, {"F2", KEY_F2},
         {"F10", KEY_F10}, {"Delete", KEY_DELETE}, {"Print", KEY_SYSRQ}, {"Insert", KEY_INSERT},
         {"Menu", KEY_COMPOSE}, {"Home", KEY_HOME}, {"End", KEY_END}, {"BackSpace", KEY_BACKSPACE},
-        {"space", KEY_SPACE},
+        {"space", KEY_SPACE}, {"Page_Up", KEY_PAGEUP}, {"Page_Down", KEY_PAGEDOWN},
     };
     for (size_t i = 0; i < sizeof keys / sizeof keys[0]; i++)
         if (!strcmp(name, keys[i].name)) return keys[i].code;

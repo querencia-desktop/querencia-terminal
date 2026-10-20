@@ -18,9 +18,9 @@ gibt es noch nicht.
 
 | | |
 |---|---|
-| Version | 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`), App-ID `org.querencia.Terminal` (Tag `terminal/appid-0.1-2`) |
-| Auf der Entwicklungs-VM | live seit 20.10.2026 |
-| Letzte Prüfung | 20.10.2026: 28 Unit-Tests, `i18n.py pruefen` (10 Texte); isolierte GUI-Prüfung Kopieren/Einfügen je Sprache 50 von 51 Fällen, Sprache 9 von 9 bei 1024×768 und 1920×1080 |
+| Version | 0.3.0 mit Reitern (Tag `terminal/0.3.0`); davor 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`), App-ID `org.querencia.Terminal` (Tag `terminal/appid-0.1-2`) |
+| Auf der Entwicklungs-VM | 0.2.0 live seit 20.10.2026; 0.3.0 geprüft, wartet auf Freigabe |
+| Letzte Prüfung | 20.10.2026 (0.3.0): 49 Unit-Tests, `i18n.py pruefen` (61 Texte); isolierte GUI-Prüfung Reiter (R1–R19) de/en bei 1024×768 und 1920×1080, Regression der 0.2.0-Szenarien |
 | Bekannte Lücken | P2 (mittlere Maustaste mit PRIMARY eines anderen Programms) offen; weitere in [docs/technik.md](docs/technik.md) |
 | Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22, VTE 0.84, Rust 1.93.1 |
 

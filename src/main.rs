@@ -1,7 +1,8 @@
 //! Querencia Terminal – Terminalemulator für Querencia Desktop.
 //!
-//! M3.0a: ein Fenster mit einem VTE-Terminal und einer Shell. Die
-//! Terminalemulation übernimmt vollständig VTE.
+//! Ein Fenster mit Menüleiste und Reitern, je Reiter ein VTE-Terminal mit
+//! einer Shell (`window.rs`, Reiter und Kürzel in `tabs.rs`, Menüleiste in
+//! `menus.rs`). Die Terminalemulation übernimmt vollständig VTE.
 //!
 //! Kopieren und Einfügen (Strg+Umschalt+C/V, Umschalt+Einfg, Kontextmenü)
 //! wie im GNOME Terminal von GNOME 2: `clipboard.rs`, `context_menu.rs`.
@@ -11,8 +12,11 @@
 
 mod clipboard;
 mod context_menu;
+mod dialogs;
 mod i18n;
+mod menus;
 mod shell;
+mod tabs;
 mod window;
 
 use gtk4::prelude::*;
@@ -25,7 +29,8 @@ const APP_ID: &str = "org.querencia.Terminal";
 fn main() -> glib::ExitCode {
     i18n::init();
     // NON_UNIQUE: Jeder Start ist ein eigener Prozess mit eigener Umgebung.
-    // Mehrere Fenster in einer Instanz kommen erst mit M3.0b.
+    // Mehrere Fenster in einer Instanz kommen erst mit M3.0b; mehrere
+    // Shells in einem Fenster gibt es als Reiter.
     let app = gtk4::Application::builder()
         .application_id(APP_ID)
         .flags(gio::ApplicationFlags::NON_UNIQUE)
@@ -35,14 +40,15 @@ fn main() -> glib::ExitCode {
     app.run()
 }
 
-/// Stil der klassischen Querencia-Menüs für das Kontextmenü; die Regeln
-/// gelten nur für `popover.querencia-menu`.
+/// Stil der klassischen Querencia-Menüs für das Kontextmenü (Regeln nur
+/// für `popover.querencia-menu`) und für Menüleiste, Reiterleiste und
+/// Dialoge (nur `window.qt-window`, `window.qt-dialog`).
 fn install_style() {
     let Some(display) = gtk4::gdk::Display::default() else {
         return;
     };
     let provider = gtk4::CssProvider::new();
-    provider.load_from_data(context_menu::MENU_CSS);
+    provider.load_from_data(&format!("{}{}", context_menu::MENU_CSS, window::WINDOW_CSS));
     gtk4::style_context_add_provider_for_display(
         &display,
         &provider,

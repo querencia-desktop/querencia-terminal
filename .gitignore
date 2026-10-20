@@ -2,3 +2,8 @@
 # Vorlage der Integration 0.2.0: Binary und Katalog nicht ins Repo
 /integration/vorlage-i18n/querencia-terminal
 /integration/vorlage-i18n/share/
+# Vorlage der Integration 0.3.0: Binary und Katalog nicht ins Repo
+/integration/vorlage-030/querencia-terminal
+/integration/vorlage-030/share/
+# Python-Zwischendateien (werkzeug/i18n.py als Modul geladen)
+__pycache__/

@@ -1,4 +1,7 @@
-# Ausnahmen für ai-clean/clean_check.py (Terminal 0.2.0, G2-AH, 20.10.2026).
+# Ausnahmen für ai-clean/clean_check.py (Terminal 0.2.0, G2-AH, 20.10.2026;
+# geprüft für 0.3.0 am 20.10.2026: dieselben Klassen, die neuen Dateien
+# src/tabs.rs, src/menus.rs, src/dialogs.rs und integration/*-030* fallen
+# unter S003/S004).
 # Bewusst KEINE Pfadeinträge: ein Pfad schaltet für ihn alle Prüfungen ab,
 # auch security. Die begründeten Ausnahmen stehen nur als Kommentar hier:
 #

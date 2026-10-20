@@ -2,13 +2,14 @@
 # Copyright (C) 2026 Querencia Desktop contributors
 # Diese Datei steht unter derselben Lizenz wie Querencia Terminal (GPL-3.0-or-later).
 # Der Wortlaut entspricht der deutschen Oberfläche bis 0.1.0 (Texte damals im Code).
+# Neue Texte ab 0.3.0 (Reiter, Menüleiste, Nachfrage) im Wortschatz von GNOME Terminal 2.x.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: querencia-terminal\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: \n"
-"PO-Revision-Date: 2026-10-20 01:45+0200\n"
+"PO-Revision-Date: 2026-10-20 22:30+0200\n"
 "Last-Translator: Querencia Desktop <147073098+pottrauschen@users.noreply.github.com>\n"
 "Language-Team: Deutsch (Querencia)\n"
 "Language: de\n"
@@ -23,7 +24,8 @@ msgid "Querencia Terminal"
 msgstr "Querencia Terminal"
 
 #. TRANSLATORS: Desktop-Datei, Schlüssel GenericName
-#: data/org.querencia.Terminal.desktop.in:12
+#. TRANSLATORS: Reitertitel, solange die Shell keinen Titel setzt.
+#: data/org.querencia.Terminal.desktop.in:12 src/tabs.rs:203
 msgid "Terminal"
 msgstr "Terminal"
 
@@ -38,32 +40,262 @@ msgid "Shell;Prompt;Command;Command Line;Terminal;"
 msgstr "Shell;Konsole;Befehlszeile;Terminal;"
 
 #. TRANSLATORS: Kontextmenü des Terminals. Die Zugriffstasten (_) der drei Zeilen müssen verschieden sein.
-#: src/context_menu.rs:70
+#: src/context_menu.rs:74
 msgid "_Copy"
 msgstr "_Kopieren"
 
 #. TRANSLATORS: Kontextmenü des Terminals.
-#: src/context_menu.rs:72
+#: src/context_menu.rs:76
 msgid "_Paste"
 msgstr "_Einfügen"
 
 #. TRANSLATORS: Kontextmenü des Terminals.
-#: src/context_menu.rs:74
+#: src/context_menu.rs:78
 msgid "Select _All"
 msgstr "Alles _auswählen"
 
+#. TRANSLATORS: Kontextmenü und Menü „Datei“; die Zugriffstaste darf im Kontextmenü nicht mit Kopieren/Einfügen/Alles auswählen zusammenfallen.
+#: src/context_menu.rs:82
+msgid "New _Tab"
+msgstr "Neuer _Reiter"
+
+#. TRANSLATORS: Kontextmenü und Menü „Datei“ (wie „New _Tab“).
+#: src/context_menu.rs:84
+msgid "C_lose Tab"
+msgstr "Reiter _schließen"
+
+#. TRANSLATORS: Nachfrage beim Schließen eines Reiters oder des Fensters mit nur einem Reiter.
+#: src/dialogs.rs:123
+msgid "Close this terminal?"
+msgstr "Dieses Terminal schließen?"
+
+#: src/dialogs.rs:124
+msgid ""
+"There is still a process running in this terminal. Closing the terminal will kill it."
+msgstr ""
+"In diesem Terminal läuft noch ein Prozess. Beim Schließen des Terminals wird er beendet."
+
+#. TRANSLATORS: Knopf der Nachfrage „Close this terminal?“.
+#: src/dialogs.rs:129
+msgid "C_lose Terminal"
+msgstr "Terminal _schließen"
+
+#. TRANSLATORS: Nachfrage beim Schließen eines Fensters mit mehreren Reitern.
+#: src/dialogs.rs:134
+msgid "Close this window?"
+msgstr "Dieses Fenster schließen?"
+
+#: src/dialogs.rs:135
+msgid ""
+"There are still processes running in some terminals in this window. Closing the window will kill all of them."
+msgstr ""
+"In einigen Terminals dieses Fensters laufen noch Prozesse. Beim Schließen des Fensters werden sie alle beendet."
+
+#. TRANSLATORS: Knopf der Nachfrage „Close this window?“.
+#: src/dialogs.rs:140
+msgid "C_lose Window"
+msgstr "Fenster _schließen"
+
+#: src/dialogs.rs:156
+msgid "_Cancel"
+msgstr "_Abbrechen"
+
+#: src/dialogs.rs:194
+msgid "Keyboard Shortcuts"
+msgstr "Tastenkürzel"
+
+#: src/dialogs.rs:206 src/dialogs.rs:248
+msgid "_Close"
+msgstr "_Schließen"
+
+#. TRANSLATORS: Titel des Info-Fensters, {name} = „Querencia Terminal“.
+#: src/dialogs.rs:225
+#, no-c-format
+msgid "About {name}"
+msgstr "Info zu {name}"
+
+#: src/dialogs.rs:238
+msgid ""
+"A terminal emulator for Querencia Desktop,\n"
+"modelled on GNOME Terminal 2.x."
+msgstr ""
+"Ein Terminalemulator für Querencia Desktop\n"
+"nach dem Vorbild von GNOME Terminal 2.x."
+
+#: src/dialogs.rs:243
+msgid "License: GNU GPL, version 3 or later"
+msgstr "Lizenz: GNU GPL, Version 3 oder später"
+
+#. TRANSLATORS: Menüleiste. Die Zugriffstasten der fünf Menüs müssen verschieden sein.
+#: src/menus.rs:55
+msgid "_File"
+msgstr "_Datei"
+
+#: src/menus.rs:70
+msgid "Close _Window"
+msgstr "_Fenster schließen"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:79
+msgid "_Edit"
+msgstr "_Bearbeiten"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:102
+msgid "_View"
+msgstr "_Ansicht"
+
+#. TRANSLATORS: Menü „Ansicht“, Häkchen: Reiterleiste auch mit nur einem Reiter zeigen.
+#: src/menus.rs:106
+msgid "Always Show _Tab Bar"
+msgstr "Reiterleiste _immer anzeigen"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:113
+msgid "_Tabs"
+msgstr "_Reiter"
+
+#: src/menus.rs:118
+msgid "_Previous Tab"
+msgstr "_Vorheriger Reiter"
+
+#: src/menus.rs:124
+msgid "_Next Tab"
+msgstr "_Nächster Reiter"
+
+#: src/menus.rs:132
+msgid "Move Tab _Left"
+msgstr "Reiter nach _links verschieben"
+
+#: src/menus.rs:138
+msgid "Move Tab _Right"
+msgstr "Reiter nach _rechts verschieben"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:147
+msgid "_Help"
+msgstr "_Hilfe"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Kürzelübersicht.
+#: src/menus.rs:150
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastenkürzel"
+
+#. TRANSLATORS: Menü „Hilfe“.
+#: src/menus.rs:152
+msgid "_About"
+msgstr "_Info"
+
 #. TRANSLATORS: steht hinter „Error:“, daher klein und ohne Punkt.
-#: src/shell.rs:62
+#: src/shell.rs:70
 msgid "no executable shell found"
 msgstr "keine ausführbare Shell gefunden"
 
 #. TRANSLATORS: {shell} ist der Pfad der Shell, {error} die Meldung von GLib; steht hinter „Error:“.
-#: src/shell.rs:95
+#: src/shell.rs:106
 #, no-c-format
 msgid "{shell} could not be started: {error}"
 msgstr "{shell} konnte nicht gestartet werden: {error}"
 
 #. TRANSLATORS: rot vor der Meldung im Terminal, z. B. „Error: no executable shell found“.
-#: src/shell.rs:114
+#: src/shell.rs:134
 msgid "Error:"
 msgstr "Fehler:"
+
+#. TRANSLATORS: Hilfe → Tastenkürzel, Tastennamen wie in der Kürzelübersicht von Querencia (Strg, Umschalt, Bild auf …).
+#: src/tabs.rs:255
+msgid "Ctrl+Shift+T"
+msgstr "Strg+Umschalt+T"
+
+#. TRANSLATORS: Hilfe → Tastenkürzel, Tastennamen wie in der Kürzelübersicht von Querencia (Strg, Umschalt, Bild auf …).
+#: src/tabs.rs:255 src/tabs.rs:270
+msgid "New tab"
+msgstr "Neuer Reiter"
+
+#: src/tabs.rs:256
+msgid "Ctrl+Shift+W"
+msgstr "Strg+Umschalt+W"
+
+#: src/tabs.rs:256 src/tabs.rs:269
+msgid "Close tab"
+msgstr "Reiter schließen"
+
+#: src/tabs.rs:257
+msgid "Ctrl+Shift+Q"
+msgstr "Strg+Umschalt+Q"
+
+#: src/tabs.rs:257
+msgid "Close window"
+msgstr "Fenster schließen"
+
+#: src/tabs.rs:258
+msgid "Ctrl+Page Up"
+msgstr "Strg+Bild auf"
+
+#: src/tabs.rs:258
+msgid "Previous tab"
+msgstr "Vorheriger Reiter"
+
+#: src/tabs.rs:259
+msgid "Ctrl+Page Down"
+msgstr "Strg+Bild ab"
+
+#: src/tabs.rs:259
+msgid "Next tab"
+msgstr "Nächster Reiter"
+
+#: src/tabs.rs:261
+msgid "Ctrl+Shift+Page Up"
+msgstr "Strg+Umschalt+Bild auf"
+
+#: src/tabs.rs:262
+msgid "Move tab to the left"
+msgstr "Reiter nach links verschieben"
+
+#: src/tabs.rs:265
+msgid "Ctrl+Shift+Page Down"
+msgstr "Strg+Umschalt+Bild ab"
+
+#: src/tabs.rs:266
+msgid "Move tab to the right"
+msgstr "Reiter nach rechts verschieben"
+
+#: src/tabs.rs:268
+msgid "Alt+1 … Alt+9"
+msgstr "Alt+1 … Alt+9"
+
+#: src/tabs.rs:268
+msgid "Switch to tab 1 … 9"
+msgstr "Zu Reiter 1 … 9 wechseln"
+
+#: src/tabs.rs:269
+msgid "Middle click on a tab"
+msgstr "Mittelklick auf einen Reiter"
+
+#: src/tabs.rs:270
+msgid "Double click on the tab bar"
+msgstr "Doppelklick auf die freie Reiterleiste"
+
+#: src/tabs.rs:271
+msgid "Ctrl+Shift+C"
+msgstr "Strg+Umschalt+C"
+
+#: src/tabs.rs:271
+msgid "Copy"
+msgstr "Kopieren"
+
+#: src/tabs.rs:272
+msgid "Ctrl+Shift+V / Shift+Insert"
+msgstr "Strg+Umschalt+V / Umschalt+Einfg"
+
+#: src/tabs.rs:272
+msgid "Paste"
+msgstr "Einfügen"
+
+#: src/tabs.rs:273
+msgid "Menu / Shift+F10"
+msgstr "Menü / Umschalt+F10"
+
+#: src/tabs.rs:273
+msgid "Context menu"
+msgstr "Kontextmenü"
