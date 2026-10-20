@@ -1,1 +1,4 @@
 /target
+# Vorlage der Integration 0.2.0: Binary und Katalog nicht ins Repo
+/integration/vorlage-i18n/querencia-terminal
+/integration/vorlage-i18n/share/

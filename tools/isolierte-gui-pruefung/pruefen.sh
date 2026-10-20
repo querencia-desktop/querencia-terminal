@@ -13,7 +13,8 @@ G=${QT_GUI_TEST:-~/projects/querencia-terminal-gui-test}
 mkdir -p "$G"
 bash "$HIER/bauen.sh" "$G/bin" >/dev/null
 TEXTPROBE="$G/textprobe-target/debug/textprobe"
-[ -x "$TEXTPROBE" ] || { echo "textprobe fehlt: (cd $HIER/textprobe && CARGO_TARGET_DIR=$G/textprobe-target cargo build --offline)" >&2; exit 2; }
+# nur Szenarien, die die GTK-4-Textprobe starten, brauchen sie
+! grep -q TEXTPROBE "$SZ" || [ -x "$TEXTPROBE" ] || { echo "textprobe fehlt: (cd $HIER/textprobe && CARGO_TARGET_DIR=$G/textprobe-target cargo build --offline)" >&2; exit 2; }
 . "$HIER/testprofil.sh"; testprofil_neu "$G" "$PROFIL"
 P="$G/$PROFIL"; mkdir -p "$P/logs" "$P/out" "$P/config/labwc" "$P/config/foot"
 # Fensterlage fest: Terminal links oben, Textprobe rechts oben, foot rechts unten.
