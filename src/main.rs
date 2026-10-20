@@ -35,7 +35,10 @@ fn main() -> glib::ExitCode {
         .application_id(APP_ID)
         .flags(gio::ApplicationFlags::NON_UNIQUE)
         .build();
-    app.connect_startup(|_| install_style());
+    app.connect_startup(|_| {
+        install_style();
+        refresh_color_scheme();
+    });
     app.connect_activate(window::build);
     app.run()
 }
@@ -54,6 +57,17 @@ fn install_style() {
         &provider,
         gtk4::STYLE_PROVIDER_PRIORITY_APPLICATION,
     );
+}
+
+/// GTK 4.22 lädt bei `color-scheme prefer-dark` das dunkle CSS nur bei
+/// einem Wechsel im laufenden Programm; ein frisch gestartetes Programm
+/// bliebe hell (`gtk_css_provider_load_named` setzt das Farbschema beim
+/// Laden zurück, QD-081). Eine Benachrichtigung nach dem Start lädt das
+/// Schema neu; hell bleibt hell. Die Farben von VTE betrifft das nicht.
+fn refresh_color_scheme() {
+    if let Some(settings) = gtk4::Settings::default() {
+        settings.notify("gtk-interface-color-scheme");
+    }
 }
 
 #[cfg(test)]

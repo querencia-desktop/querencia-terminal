@@ -35,6 +35,10 @@ Reiter wie im GNOME Terminal 2.x (Anlass: Werkstatt QREL-06 A4.4, QD-079):
 - 51 neue Texte englisch/deutsch (61 insgesamt).
 - Isolierte GUI-Prüfung: `szenario-reiter.sh` (R1–R19), `qeingabe` kennt
   Bild auf/ab.
+- Farbschema: einmal nach dem Start `gtk-interface-color-scheme` neu
+  melden, damit GTK 4.22 bei `prefer-dark` das dunkle CSS auch für ein neu
+  gestartetes Programm lädt (QD-081; betrifft Menü- und Reiterleiste,
+  nicht die Farben von VTE).
 
 ## 0.2.0 – 2026-10-20
 
