@@ -13,7 +13,8 @@ set -euo pipefail
 HIER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PANEL=$(realpath -e "${1:?Panel-Binary}"); DESKTOP=$(realpath -e "${2:?Desktop-Binary}")
 PROFIL="${3:?Profilname}"; GROESSE="${4:?BREITExHÖHE}"; SZQ=$(realpath -e "${5:?Szenario}")
-VORSCHLAG="$HIER/../../integration/vorschlag"
+# QT_STARTER_QUELLE: anderer Ordner mit den beiden Startern (z. B. Kopie des Live-Stands)
+VORSCHLAG="${QT_STARTER_QUELLE:-$HIER/../../integration/vorschlag}"
 G=${QT_GUI_TEST:-~/projects/querencia-terminal-gui-test}
 mkdir -p "$G"
 bash "$HIER/bauen.sh" "$G/bin" >/dev/null
