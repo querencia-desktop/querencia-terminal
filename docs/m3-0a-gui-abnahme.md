@@ -1,20 +1,20 @@
 # M3.0a – Anleitung GUI-Abnahme
 
 Die Abnahme führt nur der Projektinhaber durch. Getestet wird in der
-laufenden Classic2-Sitzung (greetd, VT 7) oder in der labwc-Testsitzung
+laufenden Querencia-Sitzung (greetd, VT 7) oder in der labwc-Testsitzung
 auf tty2, nie in beiden gleichzeitig. Weder die Sitzung noch ihre
 Konfiguration werden verändert. Querencia Terminal wird nur als normales
 Fenster aus einem vorhandenen Terminal (z. B. foot) gestartet.
 
-Voraussetzung ist ein gebautes Binary: `cargo build` in
-`~/projects/querencia-terminal-dev`.
+Voraussetzung ist ein gebautes Binary: `cargo build` im
+Checkout des Repos.
 
 ## Start
 
 Im vorhandenen Terminal:
 
 ```
-cd ~/projects/querencia-terminal-dev
+cd querencia-terminal   # Checkout des Repos
 ./target/debug/querencia-terminal 2>&1 | tee ~/qt-m3-0a-1.log
 ```
 

@@ -193,6 +193,12 @@ Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
   `primary_selection`), keine X11-Wege. Inhalte werden nie protokolliert;
   `QUERENCIA_TERMINAL_DEBUG=1` meldet nur Ereignisse.
 - Isolierte GUI-Prüfung: `tools/isolierte-gui-pruefung/pruefen.sh`.
+  Pfade kommen aus `$HOME`, `XDG_*` oder der Umgebung: `QT_GUI_TEST`
+  (Testordner, Standard `$HOME/projects/querencia-terminal-gui-test`),
+  `QT_LABWC` (Standard `$HOME/opt/labwc-0.9.8/bin/labwc`),
+  `QT_RUNTIME_BASIS` (Ort der Laufzeitordner `qterm-runtime-*`, Standard
+  `$TMPDIR` bzw. `/tmp`), `CARGO_HOME` (Wayland-Protokolle für
+  `bauen.sh`). Die GTK-4-Textprobe meldet sich als `org.querencia.Textprobe`.
 
 ## Reiter (0.3.0, wie GNOME Terminal 2.x)
 

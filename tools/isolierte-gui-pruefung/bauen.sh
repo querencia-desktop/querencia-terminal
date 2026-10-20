@@ -4,7 +4,7 @@ set -euo pipefail
 HIER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUT="${1:?Zielverzeichnis}"
 mkdir -p "$OUT"
-VP=$(ls -d ~/.cargo/registry/src/*/wayland-protocols-wlr-0.3.*/wlr-protocols/unstable/wlr-virtual-pointer-unstable-v1.xml | head -1)
+VP=$(ls -d "${CARGO_HOME:-$HOME/.cargo}"/registry/src/*/wayland-protocols-wlr-0.3.*/wlr-protocols/unstable/wlr-virtual-pointer-unstable-v1.xml | head -1)
 OM=$(dirname "$VP")/wlr-output-management-unstable-v1.xml
 for x in "$VP" "$HIER/virtual-keyboard-unstable-v1.xml" "$OM"; do
   b=$(basename "$x" .xml)

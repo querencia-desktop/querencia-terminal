@@ -15,14 +15,18 @@ PANEL=$(realpath -e "${1:?Panel-Binary}"); DESKTOP=$(realpath -e "${2:?Desktop-B
 PROFIL="${3:?Profilname}"; GROESSE="${4:?BREITExHÖHE}"; SZQ=$(realpath -e "${5:?Szenario}")
 # QT_STARTER_QUELLE: anderer Ordner mit den beiden Startern (z. B. Kopie des Live-Stands)
 VORSCHLAG="${QT_STARTER_QUELLE:-$HIER/../../integration/vorschlag}"
-G=${QT_GUI_TEST:-~/projects/querencia-terminal-gui-test}
+G=${QT_GUI_TEST:-$HOME/projects/querencia-terminal-gui-test}
 mkdir -p "$G"
 bash "$HIER/bauen.sh" "$G/bin" >/dev/null
 . "$HIER/testprofil.sh"; testprofil_neu "$G" "$PROFIL"
 P="$G/$PROFIL"
 mkdir -p "$P/logs" "$P/out" "$P/config/labwc" "$P/config/dconf" "$P/data/applications" "$P/data/themes" \
     "$P/state/querencia" "$P/schreibtisch"
-# labwc wie die Sitzung: Theme Querencia-Klassisch, Symbolthema gnome-human
+# labwc wie die Sitzung: Theme Querencia-Klassisch, Symbolthema gnome-human.
+# Gelesen wird aus dem Profil des Aufrufers (nur Kopien bzw. ein Link):
+ECHT_DATEN=${XDG_DATA_HOME:-$HOME/.local/share}
+ECHT_KONFIG=${XDG_CONFIG_HOME:-$HOME/.config}
+ECHT_STATE=${XDG_STATE_HOME:-$HOME/.local/state}
 cat > "$P/config/labwc/rc.xml" <<X
 <?xml version="1.0"?>
 <labwc_config>
@@ -31,14 +35,14 @@ cat > "$P/config/labwc/rc.xml" <<X
   <placement><policy>center</policy></placement>
 </labwc_config>
 X
-ln -s "$(readlink -f ~/.local/share/themes/Querencia-Klassisch)" "$P/data/themes/Querencia-Klassisch"
+ln -s "$(readlink -f "$ECHT_DATEN/themes/Querencia-Klassisch")" "$P/data/themes/Querencia-Klassisch"
 # GTK-Einstellungen (Symbolthema, Schrift) als Kopie der Sitzung
-[ -f ~/.config/dconf/user ] && cp ~/.config/dconf/user "$P/config/dconf/user"
+[ -f "$ECHT_KONFIG/dconf/user" ] && cp "$ECHT_KONFIG/dconf/user" "$P/config/dconf/user"
 printf 'XDG_DESKTOP_DIR="%s"\n' "$P/schreibtisch" > "$P/config/user-dirs.dirs"
 # Starter: neuer Starter, Brücke (außer „ohne-bruecke“), Lage der Desktop-Symbole wie live
 cp "$VORSCHLAG/org.querencia.Terminal.desktop" "$P/data/applications/"
 [ "${6:-}" = ohne-bruecke ] || cp "$VORSCHLAG/org.example.Querencia.Terminal.desktop" "$P/data/applications/"
-cp ~/.local/state/querencia/desktop-symbole "$P/state/querencia/desktop-symbole"
+cp "$ECHT_STATE/querencia/desktop-symbole" "$P/state/querencia/desktop-symbole"
 {
     echo "Panel:   $PANEL ($(sha256sum "$PANEL" | cut -c1-16))"
     echo "Desktop: $DESKTOP ($(sha256sum "$DESKTOP" | cut -c1-16))"

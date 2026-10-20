@@ -13,7 +13,7 @@ fn main() -> glib::ExitCode {
     let out = args.get(1).cloned().expect("Ausgabedatei");
     let preset = args.get(2).map(|p| std::fs::read_to_string(p).expect("Vorgabe"));
     let app = gtk4::Application::builder()
-        .application_id("org.example.Querencia.Textprobe")
+        .application_id("org.querencia.Textprobe")
         .flags(gio::ApplicationFlags::NON_UNIQUE)
         .build();
     app.connect_activate(move |app| {

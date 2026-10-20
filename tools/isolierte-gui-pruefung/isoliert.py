@@ -12,6 +12,11 @@ nur ins Profil. Beendet wird ausschließlich der selbst gestartete Prozessbaum
 Aufruf:  isoliert.py <profil> <skript>
 <skript> ist ein Shell-Skript, das in der isolierten Umgebung läuft
 (WAYLAND_DISPLAY gesetzt) und dessen Ausgabe protokolliert wird.
+
+Umgebung (optional):
+  QT_LABWC          labwc-Binary (Standard: $HOME/opt/labwc-0.9.8/bin/labwc)
+  QT_RUNTIME_BASIS  Ordner für die Laufzeitordner qterm-runtime-*
+                    (Standard: $TMPDIR bzw. /tmp)
 """
 
 import os
@@ -22,7 +27,8 @@ import sys
 import tempfile
 import time
 
-LABWC = "~/opt/labwc-0.9.8/bin/labwc"
+HOME = os.path.expanduser("~")
+LABWC = os.environ.get("QT_LABWC") or os.path.join(HOME, "opt/labwc-0.9.8/bin/labwc")
 
 
 def _session_labwc(pid: str) -> bool:
@@ -55,13 +61,13 @@ def main() -> int:
                     '  <core><decoration>server</decoration></core>\n'
                     '  <theme><name>Clearlooks</name></theme>\n'
                     '</labwc_config>\n')
-    runtime = tempfile.mkdtemp(prefix="qterm-runtime-", dir="~/.werkstatt/cache/scratch")
+    runtime = tempfile.mkdtemp(prefix="qterm-runtime-", dir=os.environ.get("QT_RUNTIME_BASIS") or None)
     os.chmod(runtime, 0o700)
 
     env = {k: v for k, v in os.environ.items()
            if not k.startswith(("WAYLAND", "DBUS", "DISPLAY", "XDG_", "LABWC", "SWAYSOCK"))}
     env.update({
-        "HOME": "~",
+        "HOME": HOME,
         "XDG_RUNTIME_DIR": runtime,
         "XDG_CONFIG_HOME": os.path.join(profile, "config"),
         "XDG_DATA_HOME": os.path.join(profile, "data"),
@@ -79,7 +85,7 @@ def main() -> int:
     })
     # User directories as on the VM (the profile has no user-dirs.dirs of
     # its own unless the caller made one).
-    real_dirs = "~/.config/user-dirs.dirs"
+    real_dirs = os.path.join(os.environ.get("XDG_CONFIG_HOME") or os.path.join(HOME, ".config"), "user-dirs.dirs")
     own_dirs = os.path.join(profile, "config/user-dirs.dirs")
     if os.path.exists(real_dirs) and not os.path.exists(own_dirs):
         shutil.copy2(real_dirs, own_dirs)

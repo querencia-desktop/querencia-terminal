@@ -6,25 +6,30 @@
 # - <profilname> ist ein einfacher Name (Buchstaben, Ziffern, . _ -; kein
 #   Schrägstrich, beginnt nicht mit einem Punkt); das Profil ist
 #   <testordner>/<profilname>.
-# - <testordner> muss (nach realpath) ein zugelassener Testordner sein.
+# - <testordner> muss (nach realpath) ein zugelassener Testordner sein:
+#   $HOME/projects/querencia-terminal-gui-test (Standard von pruefen*.sh),
+#   $HOME/projects/querencia-terminal-werkstatt/gui-test oder ein Unterordner
+#   von $HOME/.werkstatt/cache/scratch.
 # - Ein vorhandenes Profil wird nur gelöscht, wenn es ein echtes Verzeichnis
 #   ist, das ein Test angelegt hat (Marke .querencia-testprofil oder logs/
 #   von isoliert.py), nie ein symbolischer Link.
 # Danach existiert das leere Profil mit der Marke. Jeder Verstoß: exit 2,
 # nichts gelöscht.
 testprofil_neu() {
-    local basis name ziel
+    local basis heim name ziel
     basis=$(realpath -e -- "${1:?Testordner}" 2>/dev/null) ||
         { echo "testprofil: Testordner fehlt: $1" >&2; exit 2; }
+    heim=$(realpath -e -- "${HOME:?}" 2>/dev/null) ||
+        { echo "testprofil: HOME fehlt: $HOME" >&2; exit 2; }
     name=${2-}
     case $name in
     '' | .* | */* | *[!A-Za-z0-9._-]*)
         echo "testprofil: unzulässiger Profilname: '$name'" >&2; exit 2 ;;
     esac
     case $basis in
-    ~/projects/querencia-terminal-gui-test | \
-    ~/projects/querencia-terminal-werkstatt/gui-test | \
-    ~/.werkstatt/cache/scratch/?*) ;;
+    "$heim"/projects/querencia-terminal-gui-test | \
+    "$heim"/projects/querencia-terminal-werkstatt/gui-test | \
+    "$heim"/.werkstatt/cache/scratch/?*) ;;
     *) echo "testprofil: kein zugelassener Testordner: $basis" >&2; exit 2 ;;
     esac
     ziel=$basis/$name

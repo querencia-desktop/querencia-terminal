@@ -418,7 +418,7 @@ mod tests {
 
     #[test]
     fn tab_title_follows_the_shell() {
-        assert_eq!(tab_title(Some("user@dev: ~")), "user@dev: ~");
+        assert_eq!(tab_title(Some("anna@testhost: ~")), "anna@testhost: ~");
         assert_eq!(tab_title(Some("  vim  ")), "vim");
         // ohne Katalog die msgid
         assert_eq!(tab_title(Some("")), "Terminal");

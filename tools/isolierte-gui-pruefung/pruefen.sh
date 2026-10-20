@@ -8,8 +8,8 @@
 set -euo pipefail
 HIER="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 QT_BIN=$(realpath -e "${1:?Terminal-Binary}"); PROFIL="${2:?Profilname}"; SZ=$(realpath -e "${3:?Szenario}")
-# Testordner außerhalb des Repos (früher querencia-terminal-werkstatt/gui-test)
-G=${QT_GUI_TEST:-~/projects/querencia-terminal-gui-test}
+# Testordner außerhalb des Repos (zugelassene Ordner: testprofil.sh)
+G=${QT_GUI_TEST:-$HOME/projects/querencia-terminal-gui-test}
 mkdir -p "$G"
 bash "$HIER/bauen.sh" "$G/bin" >/dev/null
 TEXTPROBE="$G/textprobe-target/debug/textprobe"
@@ -28,7 +28,7 @@ cat > "$P/config/labwc/rc.xml" <<X
     <windowRule identifier="org.querencia.Terminal"><action name="MoveTo" x="0" y="0"/></windowRule>
     <!-- Gegenprobe mit Ständen vor der App-ID-Umstellung -->
     <windowRule identifier="org.example.Querencia.Terminal"><action name="MoveTo" x="0" y="0"/></windowRule>
-    <windowRule identifier="org.example.Querencia.Textprobe"><action name="MoveTo" x="760" y="0"/></windowRule>
+    <windowRule identifier="org.querencia.Textprobe"><action name="MoveTo" x="760" y="0"/></windowRule>
     <windowRule identifier="foot"><action name="MoveTo" x="760" y="330"/></windowRule>
   </windowRules>
 </labwc_config>
