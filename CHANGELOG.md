@@ -56,8 +56,7 @@ Englisch und Deutsch über GNU gettext (G2-AH, Muster Querencia Editor 0.2.0):
   `data/org.querencia.Terminal.desktop.in` erzeugt (wie `msgfmt --desktop`).
 - AppStream-MetaInfo `data/org.querencia.Terminal.metainfo.xml` mit der
   alten ID `org.example.Querencia.Terminal` unter `<provides>`.
-- Lizenzkopf in `LICENSE` im README (Copyright „Querencia
-  Desktop contributors“).
+- Lizenzkopf (Copyright „Querencia Desktop contributors“).
 - Isolierte GUI-Prüfung: Sprache wählbar (`QT_LANGUAGE`), Zugriffstaste
   „Einfügen“ je Sprache.
 

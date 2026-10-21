@@ -351,9 +351,6 @@ src/window.rs  Fenster, Reiter (Notebook), Aktionen, Maus auf der Leiste, Prozes
 src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
 src/context_menu.rs  klassisches Kontextmenü
 tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
-integration/   Integration in der Entwicklungs-VM (App-ID-Umstellung,
-               0.2.0 mit Katalog, 0.3.0 Reiter; pruefen|aktivieren|zurueck),
-               Vorlagen, Probe; feste Pfade, nicht zur Veröffentlichung
 src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus
 vendor/vte4/   lokale Kopie von vte4 0.10.0 mit Patch (Lizenz MIT)
 ```

@@ -21,3 +21,14 @@
 # S005 englische Kommentare in isoliert.py und qeingabe.c: Kopien aus
 #      querencia-runtime, Sprache der Herkunft beibehalten; vendor/vte4
 #      ist Upstream.
+#
+# Veröffentlichungsklon (ENTSCHEIDUNGEN Nr. 17, Vorlagen-Commit): GitHub erwartet
+# diese Dateien im Root bzw. unter .github/ – die einzigen Pfadeinträge, begründete
+# Ausnahmen von „keine Pfadeinträge“ (reine Vorlagen bzw. Protokolldaten).
+MARKE.md
+CONTRIBUTING.md
+SECURITY.md
+CHANGELOG.md
+.github/pull_request_template.md
+.github/ISSUE_TEMPLATE/*.md
+tools/isolierte-gui-pruefung/virtual-keyboard-unstable-v1.xml

@@ -7,3 +7,5 @@
 /integration/vorlage-030/share/
 # Python-Zwischendateien (werkzeug/i18n.py als Modul geladen)
 __pycache__/
+# Ausgaben der isolierten Prüfung (nicht einchecken)
+/nachweis/
