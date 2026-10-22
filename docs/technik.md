@@ -194,6 +194,27 @@ Umgesetzt (gebaut und geprüft siehe Abschnitt „Prüfstand“):
   `QUERENCIA_TERMINAL_DEBUG=1` meldet nur Ereignisse.
 - Isolierte GUI-Prüfung: `tools/isolierte-gui-pruefung/pruefen.sh`.
 
+## Dateien ins Terminal ziehen (0.3.2, wie GNOME Terminal)
+
+`src/dnd.rs`: ein `GtkDropTarget` je Reiter nimmt eine Dateiliste
+(`GdkFileList`, unter Wayland aus `text/uri-list`) oder Text an, nur mit der
+Aktion „Kopieren“ (eine Quelle, die verschieben will, löscht so nie etwas).
+
+- Dateien: lokale als Pfad, andere Adressen (sftp://, smb://) als URI;
+  jedes Stück in einfachen Anführungszeichen (`'` als `'\''`) und mit einem
+  Leerzeichen dahinter. Mehrere Dateien stehen nacheinander.
+- Text: unverändert.
+- Eingefügt wird mit `Terminal::paste_text` an der Schreibmarke, wie aus der
+  Zwischenablage: VTE klammert mit Bracketed Paste, wenn die Shell es
+  verlangt (bash ab 5.1); ein gezogener Text mit Zeilenumbruch wird dann
+  nicht sofort ausgeführt. Danach bekommt das Terminal den Fokus.
+- Mit `QUERENCIA_TERMINAL_DEBUG=1` steht im Log nur die Zahl der Dateien
+  bzw. Zeichen, nie der Inhalt.
+
+Prüfung: `tools/dunkel-pruefung/szenario-ziehen.sh` (Querencia Files
+isoliert neben dem Terminal, eine und zwei Dateien mit Leerzeichen und
+Apostroph; die Shell-Funktion `zeig` schreibt die empfangenen Argumente mit).
+
 ## Reiter (0.3.0, wie GNOME Terminal 2.x)
 
 - **Reiterleiste** ab dem zweiten Reiter; Ansicht → „Reiterleiste immer
@@ -344,8 +365,10 @@ data/org.querencia.Terminal.desktop  Desktop-Datei mit [de] (Exec ohne Pfad)
 data/org.querencia.Terminal.metainfo.xml  AppStream-MetaInfo
 src/window.rs  Fenster, Reiter (Notebook), Aktionen, Maus auf der Leiste, Prozessende
 src/clipboard.rs     Kürzel und Zwischenablage (Kopieren, Einfügen)
+src/dnd.rs           Dateien und Text ins Terminal ziehen (0.3.2)
 src/context_menu.rs  klassisches Kontextmenü
 tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
+tools/dunkel-pruefung/  isolierte Prüfung hell/dunkel und Ziehen aus Files (eigenes HOME)
 integration/   Integration in der Entwicklungs-VM (App-ID-Umstellung,
                0.2.0 mit Katalog, 0.3.0 Reiter; pruefen|aktivieren|zurueck),
                Vorlagen, Probe; feste Pfade, nicht zur Veröffentlichung

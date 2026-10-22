@@ -24,7 +24,7 @@ use vte4::prelude::*;
 
 use crate::dialogs::{self, Closing};
 use crate::tabs::{self, TabBar};
-use crate::{clipboard, context_menu, menus, shell};
+use crate::{clipboard, context_menu, dnd, menus, shell};
 
 const TITLE: &str = "Querencia Terminal";
 
@@ -535,6 +535,7 @@ impl TerminalWindow {
         self.0.tabs.borrow_mut().push(tab.clone());
 
         self.install_context_menu(&terminal);
+        dnd::install(&terminal);
 
         let weak_tab = Rc::downgrade(&tab);
         terminal.connect_window_title_changed(move |_| {

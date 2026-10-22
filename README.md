@@ -18,9 +18,9 @@ gibt es noch nicht.
 
 | | |
 |---|---|
-| Version | 0.3.1: Menü- und Reiterleiste folgen dem Dunkelmodus, Hilfe-Menü mit Online-Hilfe und Fehlermeldung (Tag `terminal/0.3.1`); davor 0.3.0 mit Reitern (Tag `terminal/0.3.0`), 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`), App-ID `org.querencia.Terminal` (Tag `terminal/appid-0.1-2`) |
-| Auf der Entwicklungs-VM | 0.3.0 live; 0.3.1 geprüft, wartet auf Freigabe |
-| Letzte Prüfung | 22.10.2026 (0.3.1): 52 Unit-Tests, `i18n.py pruefen` (66 Texte); isolierte Prüfung hell/dunkel mit drei Reitern (`tools/dunkel-pruefung/`) de/en, Wechsel im laufenden Programm, Gegenprobe 0.3.0 |
+| Version | 0.3.2: Dateien ins Terminal ziehen fügt ihre Pfade ein (Tag `terminal/0.3.2`); davor 0.3.1 Dunkelmodus der Leisten und Hilfe-Menü (Tag `terminal/0.3.1`), 0.3.0 mit Reitern, 0.2.0, App-ID `org.querencia.Terminal` (Tag `terminal/appid-0.1-2`) |
+| Auf der Entwicklungs-VM | 0.3.1 live; 0.3.2 geprüft, wartet auf Freigabe |
+| Letzte Prüfung | 22.10.2026 (0.3.2): 55 Unit-Tests, `i18n.py pruefen` (66 Texte); isoliert: Ziehen aus Querencia Files (eine und zwei Dateien, Quoting über die echte Shell) de/en, hell/dunkel mit drei Reitern de/en (`tools/dunkel-pruefung/`) |
 | Bekannte Lücken | P2 (mittlere Maustaste mit PRIMARY eines anderen Programms) offen; weitere in [docs/technik.md](docs/technik.md) |
 | Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22, VTE 0.84, Rust 1.93.1 |
 

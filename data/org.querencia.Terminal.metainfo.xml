@@ -17,8 +17,8 @@
   </developer>
   <project_group>Querencia</project_group>
   <description>
-    <p>Querencia Terminal is the terminal emulator of Querencia Desktop. It is built on VTE and offers tabs, copy and paste with Ctrl+Shift+C and Ctrl+Shift+V and a classic context menu.</p>
-    <p xml:lang="de">Querencia Terminal ist der Terminalemulator von Querencia Desktop. Er baut auf VTE auf und bietet Reiter, Kopieren und Einfügen mit Strg+Umschalt+C und Strg+Umschalt+V sowie ein klassisches Kontextmenü.</p>
+    <p>Querencia Terminal is the terminal emulator of Querencia Desktop. It is built on VTE and offers tabs, copy and paste with Ctrl+Shift+C and Ctrl+Shift+V, a classic context menu, and inserts the paths of files dropped onto it.</p>
+    <p xml:lang="de">Querencia Terminal ist der Terminalemulator von Querencia Desktop. Er baut auf VTE auf und bietet Reiter, Kopieren und Einfügen mit Strg+Umschalt+C und Strg+Umschalt+V, ein klassisches Kontextmenü und fügt die Pfade hineingezogener Dateien ein.</p>
   </description>
   <url type="homepage">https://querencialinux.org</url>
   <launchable type="desktop-id">org.querencia.Terminal.desktop</launchable>
@@ -47,6 +47,7 @@
     <color type="primary" scheme_preference="dark">#B8532B</color>
   </branding>
   <releases>
+    <release version="0.3.2" date="2026-10-22"/>
     <release version="0.3.1" date="2026-10-22"/>
     <release version="0.3.0" date="2026-10-20"/>
     <release version="0.2.0" date="2026-10-20"/>
