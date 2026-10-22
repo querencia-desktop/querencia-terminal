@@ -40,81 +40,91 @@ msgid "Shell;Prompt;Command;Command Line;Terminal;"
 msgstr "Shell;Konsole;Befehlszeile;Terminal;"
 
 #. TRANSLATORS: Kontextmenü des Terminals. Die Zugriffstasten (_) der drei Zeilen müssen verschieden sein.
-#: src/context_menu.rs:74
+#: src/context_menu.rs:80
 msgid "_Copy"
 msgstr "_Kopieren"
 
 #. TRANSLATORS: Kontextmenü des Terminals.
-#: src/context_menu.rs:76
+#: src/context_menu.rs:82
 msgid "_Paste"
 msgstr "_Einfügen"
 
 #. TRANSLATORS: Kontextmenü des Terminals.
-#: src/context_menu.rs:78
+#: src/context_menu.rs:84
 msgid "Select _All"
 msgstr "Alles _auswählen"
 
 #. TRANSLATORS: Kontextmenü und Menü „Datei“; die Zugriffstaste darf im Kontextmenü nicht mit Kopieren/Einfügen/Alles auswählen zusammenfallen.
-#: src/context_menu.rs:82
+#: src/context_menu.rs:88
 msgid "New _Tab"
 msgstr "Neuer _Reiter"
 
 #. TRANSLATORS: Kontextmenü und Menü „Datei“ (wie „New _Tab“).
-#: src/context_menu.rs:84
+#: src/context_menu.rs:90
 msgid "C_lose Tab"
 msgstr "Reiter _schließen"
 
+#. TRANSLATORS: Adresse der Online-Hilfe (Hilfe → Online-Hilfe); nur den Sprachteil ersetzen, deutsch https://querencialinux.org/de/docs/.
+#: src/dialogs.rs:31
+msgid "https://querencialinux.org/en/docs/"
+msgstr "https://querencialinux.org/de/docs/"
+
 #. TRANSLATORS: Nachfrage beim Schließen eines Reiters oder des Fensters mit nur einem Reiter.
-#: src/dialogs.rs:123
+#: src/dialogs.rs:153
 msgid "Close this terminal?"
 msgstr "Dieses Terminal schließen?"
 
-#: src/dialogs.rs:124
+#: src/dialogs.rs:154
 msgid ""
 "There is still a process running in this terminal. Closing the terminal will kill it."
 msgstr ""
 "In diesem Terminal läuft noch ein Prozess. Beim Schließen des Terminals wird er beendet."
 
 #. TRANSLATORS: Knopf der Nachfrage „Close this terminal?“.
-#: src/dialogs.rs:129
+#: src/dialogs.rs:159
 msgid "C_lose Terminal"
 msgstr "Terminal _schließen"
 
 #. TRANSLATORS: Nachfrage beim Schließen eines Fensters mit mehreren Reitern.
-#: src/dialogs.rs:134
+#: src/dialogs.rs:164
 msgid "Close this window?"
 msgstr "Dieses Fenster schließen?"
 
-#: src/dialogs.rs:135
+#: src/dialogs.rs:165
 msgid ""
 "There are still processes running in some terminals in this window. Closing the window will kill all of them."
 msgstr ""
 "In einigen Terminals dieses Fensters laufen noch Prozesse. Beim Schließen des Fensters werden sie alle beendet."
 
 #. TRANSLATORS: Knopf der Nachfrage „Close this window?“.
-#: src/dialogs.rs:140
+#: src/dialogs.rs:170
 msgid "C_lose Window"
 msgstr "Fenster _schließen"
 
-#: src/dialogs.rs:156
+#: src/dialogs.rs:186
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: src/dialogs.rs:194
+#: src/dialogs.rs:224
 msgid "Keyboard Shortcuts"
 msgstr "Tastenkürzel"
 
-#: src/dialogs.rs:206 src/dialogs.rs:248
+#: src/dialogs.rs:236 src/dialogs.rs:300
 msgid "_Close"
 msgstr "_Schließen"
 
 #. TRANSLATORS: Titel des Info-Fensters, {name} = „Querencia Terminal“.
-#: src/dialogs.rs:225
+#: src/dialogs.rs:256
 #, no-c-format
 msgid "About {name}"
 msgstr "Info zu {name}"
 
-#: src/dialogs.rs:238
+#. TRANSLATORS: Info-Fenster, Entwicklungsstand unter Name und Version.
+#: src/dialogs.rs:270
+msgid "Alpha – not released for everyday use"
+msgstr "Alpha – nicht für den Alltag freigegeben"
+
+#: src/dialogs.rs:271
 msgid ""
 "A terminal emulator for Querencia Desktop,\n"
 "modelled on GNOME Terminal 2.x."
@@ -122,9 +132,14 @@ msgstr ""
 "Ein Terminalemulator für Querencia Desktop\n"
 "nach dem Vorbild von GNOME Terminal 2.x."
 
-#: src/dialogs.rs:243
+#: src/dialogs.rs:288
 msgid "License: GNU GPL, version 3 or later"
 msgstr "Lizenz: GNU GPL, Version 3 oder später"
+
+#. TRANSLATORS: Info-Fenster, Urheberzeile; „contributors“ bleibt englisch wie im Lizenzkopf der Quellen.
+#: src/dialogs.rs:292
+msgid "© 2026 Querencia Desktop contributors"
+msgstr "© 2026 Querencia Desktop contributors"
 
 #. TRANSLATORS: Menüleiste. Die Zugriffstasten der fünf Menüs müssen verschieden sein.
 #: src/menus.rs:55
@@ -176,13 +191,23 @@ msgstr "Reiter nach _rechts verschieben"
 msgid "_Help"
 msgstr "_Hilfe"
 
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Hilfeseiten auf querencialinux.org im Browser.
+#: src/menus.rs:152
+msgid "_Online Help"
+msgstr "_Online-Hilfe"
+
 #. TRANSLATORS: Menü „Hilfe“, öffnet die Kürzelübersicht.
-#: src/menus.rs:150
+#: src/menus.rs:154
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastenkürzel"
 
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Meldestelle für Fehler im Browser.
+#: src/menus.rs:159
+msgid "_Report a Problem"
+msgstr "_Fehler melden"
+
 #. TRANSLATORS: Menü „Hilfe“.
-#: src/menus.rs:152
+#: src/menus.rs:163
 msgid "_About"
 msgstr "_Info"
 

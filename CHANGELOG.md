@@ -1,5 +1,28 @@
 # Änderungen
 
+## 0.3.1 – 2026-10-22
+
+Dunkelmodus und Hilfe:
+
+- Menüleiste, Reiterleiste, die Menüs der Menüleiste und das Kontextmenü
+  folgen dem Dunkelmodus: Flächen, Schrift und Ränder kommen als benannte
+  Farben aus dem GTK-Thema (`@theme_bg_color`, `@theme_fg_color`,
+  `@theme_base_color`, `@menu_bg_color`, `@menu_fg_color`, `@borders`),
+  ohne eigenen `@media`-Block. Unter Querencia-Klassisch hell bleiben die
+  Flächen pixelgleich; nur Trennlinie und Untermenüpfeil im Kontextmenü
+  sind aus Themenfarben gemischt (#dbd8d4 statt #dcd8d3, #686868 statt
+  #686463). Der Terminalbereich selbst (VTE) ist unverändert.
+- Hilfe-Menü: neu „Online-Hilfe“ (https://querencialinux.org/de/docs/ bzw.
+  /en/docs/, je nach Sprache der Oberfläche) und „Fehler melden“
+  (Meldestelle auf GitHub); beide öffnen den Browser.
+- Info-Fenster: „Alpha – nicht für den Alltag freigegeben“, Verweis auf
+  https://querencialinux.org und „© 2026 Querencia Desktop contributors“.
+- MetaInfo: Homepage https://querencialinux.org.
+- 5 neue Texte englisch/deutsch (66 insgesamt).
+- Isolierte Prüfung hell/dunkel: `tools/dunkel-pruefung/` (eigenes HOME,
+  Farbschema per gsettings im Profil, Portal-Ersatz, Adress-Probe statt
+  Browser, Auswertung der Farben).
+
 ## 0.3.0 – 2026-10-20
 
 Reiter wie im GNOME Terminal 2.x (Anlass: Werkstatt QREL-06 A4.4, QD-079):
