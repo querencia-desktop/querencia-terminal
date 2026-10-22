@@ -1,5 +1,20 @@
 # Änderungen
 
+## 0.3.2 – 2026-10-22
+
+Dateien ins Terminal ziehen (QD-125):
+
+- Dateien aus Querencia Files (oder einem anderen Programm) ins
+  Terminalfenster ziehen fügt ihre Pfade an der Schreibmarke ein, wie im
+  GNOME Terminal: jeder Pfad in einfachen Anführungszeichen und mit einem
+  Leerzeichen dahinter, mehrere nacheinander. Andere Adressen (z. B.
+  sftp://) bleiben als Adresse, gezogener Text wird unverändert eingefügt.
+- Eingefügt wird wie beim Einfügen aus der Zwischenablage (Bracketed Paste):
+  ein gezogener Text mit Zeilenumbruch wird nicht sofort ausgeführt.
+- Das Terminal nimmt nur „Kopieren“ an; Files verschiebt beim Ziehen ins
+  Terminal nie eine Datei.
+- Isolierte Prüfung `tools/dunkel-pruefung/szenario-ziehen.sh` mit Files.
+
 ## 0.3.1 – 2026-10-22
 
 Dunkelmodus und Hilfe:

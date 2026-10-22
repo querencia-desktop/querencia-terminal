@@ -40,6 +40,7 @@ cat >"$P/config/labwc/rc.xml" <<X
   <placement><policy>automatic</policy></placement>
   <windowRules>
     <windowRule identifier="org.querencia.Terminal" title="Querencia Terminal"><action name="MoveTo" x="0" y="0"/></windowRule>
+    <windowRule identifier="io.github.lgse.Strata"><action name="MoveTo" x="830" y="0"/></windowRule>
   </windowRules>
 </labwc_config>
 X
@@ -60,6 +61,11 @@ MimeType=x-scheme-handler/http;x-scheme-handler/https;
 NoDisplay=true
 X
 printf '[Default Applications]\nx-scheme-handler/http=qtd-uri-probe.desktop\nx-scheme-handler/https=qtd-uri-probe.desktop\n' >"$P/config/mimeapps.list"
+# Testdateien für das Ziehen aus Files (szenario-ziehen.sh)
+mkdir -p "$P/home/Ziehen"
+printf 'eins\n' >"$P/home/Ziehen/einfach.txt"
+printf 'zwei\n' >"$P/home/Ziehen/mit Leerzeichen.txt"
+printf 'drei\n' >"$P/home/Ziehen/it's.txt"
 # Shell der Reiter: bash ohne ~/.bashrc, mit festem Prompt und Titel-Hilfe
 : >"$P/inputrc"
 cat >"$P/testrc" <<X
@@ -67,6 +73,8 @@ PS1='\$ '
 HISTFILE=/dev/null
 unset PROMPT_COMMAND
 titel() { printf '\\033]0;%s\\007' "\$1"; }
+# zeig ARGS: jedes Argument als <…> in out/ziehen.txt (szenario-ziehen.sh)
+zeig() { printf '<%s>\\n' "\$@" >>'$P/out/ziehen.txt'; echo "---" >>'$P/out/ziehen.txt'; }
 X
 printf '#!/bin/bash\nexport INPUTRC=%q\nexec /bin/bash --noprofile --rcfile %q -i\n' "$P/inputrc" "$P/testrc" >"$P/qshell"
 chmod +x "$P/qshell"
@@ -80,6 +88,7 @@ SCHEMA=$SCHEMA
 SPRACHE=$SPRACHE
 BIN=$BIN
 AKTIONEN=${QTD_AKTIONEN:-ja}
+FILES=${QTD_FILES:-~/opt/querencia-files/a6cc41d58f9bd299/strata}
 SCHRIFT='$schrift'
 MONO='$mono'
 export GSK_RENDERER=cairo GDK_DISABLE=gl,vulkan LANG=en_US.UTF-8 LANGUAGE=$SPRACHE
