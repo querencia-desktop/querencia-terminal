@@ -1,7 +1,7 @@
 # Querencia Terminal – Technik, Umfang, Prüfstand
 
-Ausführliche Technik- und Prüfangaben, aus dem README ausgelagert (DOKU-1,
-20.10.2026). Einstieg und Stand: [README](../README.md).
+Ausführliche Technik- und Prüfangaben, aus dem README ausgelagert
+(20.10.2026). Einstieg und Stand: [README](../README.md).
 
 ## Technik
 
@@ -94,7 +94,7 @@ cargo run
 ```
 
 Das Programm braucht eine laufende Wayland- (oder X11-)Sitzung. Auf der
-Entwicklungs-VM nie in der laufenden Desktopsitzung starten, sondern nur in
+Entwicklungsumgebung nie in der laufenden Desktopsitzung starten, sondern nur in
 einer isolierten Sitzung (`tools/isolierte-gui-pruefung/`, siehe
 „Prüfstand“). Meldungen
 zum Shell-Start und Prozessende gehen mit dem Präfix `querencia-terminal:`
@@ -251,7 +251,7 @@ Apostroph; die Shell-Funktion `zeig` schreibt die empfangenen Argumente mit).
   Shell-PID, wie GNOME Terminal 2.x): Reiter bzw. Fenster mit einem Reiter
   „Dieses Terminal schließen?“, Fenster mit mehreren Reitern „Dieses
   Fenster schließen?“; vorgewählt ist „Abbrechen“. Hintergrundjobs zählen
-  nicht. Dialoge werden jedes Mal neu gebaut (QD-076).
+  nicht. Dialoge werden jedes Mal neu gebaut.
 - **Menüleiste** Datei | Bearbeiten | Ansicht | Reiter | Hilfe
   (`menus.rs`), Kürzel nur als Anzeige im Menü. F10 und Alt+Buchstabe
   öffnen sie nicht (`handle-menubar-accel` aus, Menüköpfe ohne
@@ -274,7 +274,7 @@ Noch nicht umgesetzt:
 
 ## Prüfstand
 
-Stand 20.10.2026 (0.3.0, Reiter), geprüft auf der Entwicklungs-VM:
+Stand 20.10.2026 (0.3.0, Reiter), geprüft in der Entwicklungsumgebung:
 
 - 49 Unit-Tests (Reitermodell, Kürzel, Menüs, Zugriffstasten je Sprache,
   Einstellung, Titel, Arbeitsverzeichnis, Vordergrundprozess), fmt und
@@ -374,7 +374,7 @@ src/dnd.rs           Dateien und Text ins Terminal ziehen (0.3.2)
 src/context_menu.rs  klassisches Kontextmenü
 tools/isolierte-gui-pruefung/  isolierte GUI-Prüfung (labwc 0.9.8)
 tools/dunkel-pruefung/  isolierte Prüfung hell/dunkel und Ziehen aus Files (eigenes HOME)
-integration/   Integration in der Entwicklungs-VM (App-ID-Umstellung,
+integration/   Integration in der Entwicklungsumgebung (App-ID-Umstellung,
                0.2.0 mit Katalog, 0.3.0 Reiter; pruefen|aktivieren|zurueck),
                Vorlagen, Probe; feste Pfade, nicht zur Veröffentlichung
 src/shell.rs   Shell-Auswahl, Start über VTE, Fehlermeldung, Wartestatus

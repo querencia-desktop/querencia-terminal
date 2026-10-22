@@ -18,7 +18,7 @@ BIN=$(realpath -e "${1:?Binary}"); NAME=${2:?Name}; SCHEMA=${3:?hell|dunkel}; SP
 RES=${5:-1280x800}; T=${6:-300}
 case $SCHEMA in hell | dunkel) ;; *) echo "Schema hell|dunkel" >&2; exit 2 ;; esac
 case $SPRACHE in de | en) ;; *) echo "Sprache de|en" >&2; exit 2 ;; esac
-G=${QT_GUI_TEST:-~/projects/querencia-terminal-gui-test}
+G=${QT_GUI_TEST:-$HOME/projects/querencia-terminal-gui-test}
 mkdir -p "$G"
 bash "$HIER/../isolierte-gui-pruefung/bauen.sh" "$G/bin" >/dev/null
 . "$HIER/../isolierte-gui-pruefung/testprofil.sh"; testprofil_neu "$G" "$NAME"
@@ -26,10 +26,10 @@ P=$G/$NAME
 S=$G/schnappschuss-symbole
 if [ ! -f "$S/zeitpunkt.txt" ]; then
     mkdir -p "$S"
-    cp -a ~/.local/share/icons/Querencia ~/.local/share/icons/hicolor "$S/"
+    cp -a $HOME/.local/share/icons/Querencia $HOME/.local/share/icons/hicolor "$S/"
     date '+%F %T' >"$S/zeitpunkt.txt"
 fi
-THEMA=$(readlink -f ~/.local/share/themes/Querencia-Klassisch)
+THEMA=$(readlink -f $HOME/.local/share/themes/Querencia-Klassisch)
 [ -f "$THEMA/gtk-4.0/gtk-dark.css" ] || { echo "Thema ohne Dunkelfassung: $THEMA" >&2; exit 2; }
 mkdir -p "$P"/{config/labwc,config/gtk-4.0,data/themes,data/icons,data/applications,state,logs,out,home}
 cat >"$P/config/labwc/rc.xml" <<X
@@ -88,7 +88,7 @@ SCHEMA=$SCHEMA
 SPRACHE=$SPRACHE
 BIN=$BIN
 AKTIONEN=${QTD_AKTIONEN:-ja}
-FILES=${QTD_FILES:-~/opt/querencia-files/a6cc41d58f9bd299/strata}
+FILES=${QTD_FILES:-$HOME/opt/querencia-files/a6cc41d58f9bd299/strata}
 SCHRIFT='$schrift'
 MONO='$mono'
 export GSK_RENDERER=cairo GDK_DISABLE=gl,vulkan LANG=en_US.UTF-8 LANGUAGE=$SPRACHE

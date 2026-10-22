@@ -2,7 +2,7 @@
 
 ## 0.3.2 – 2026-10-22
 
-Dateien ins Terminal ziehen (QD-125):
+Dateien ins Terminal ziehen:
 
 - Dateien aus Querencia Files (oder einem anderen Programm) ins
   Terminalfenster ziehen fügt ihre Pfade an der Schreibmarke ein, wie im
@@ -40,7 +40,7 @@ Dunkelmodus und Hilfe:
 
 ## 0.3.0 – 2026-10-20
 
-Reiter wie im GNOME Terminal 2.x (Anlass: Werkstatt QREL-06 A4.4, QD-079):
+Reiter wie im GNOME Terminal 2.x:
 
 - Reiterleiste ab dem zweiten Reiter; Ansicht → „Reiterleiste immer
   anzeigen“ zeigt sie auch mit einem Reiter (gespeichert in
@@ -75,12 +75,12 @@ Reiter wie im GNOME Terminal 2.x (Anlass: Werkstatt QREL-06 A4.4, QD-079):
   Bild auf/ab.
 - Farbschema: einmal nach dem Start `gtk-interface-color-scheme` neu
   melden, damit GTK 4.22 bei `prefer-dark` das dunkle CSS auch für ein neu
-  gestartetes Programm lädt (QD-081; betrifft Menü- und Reiterleiste,
-  nicht die Farben von VTE).
+  gestartetes Programm lädt (betrifft Menü- und Reiterleiste, nicht die
+  Farben von VTE).
 
 ## 0.2.0 – 2026-10-20
 
-Englisch und Deutsch über GNU gettext (G2-AH, Muster Querencia Editor 0.2.0):
+Englisch und Deutsch über GNU gettext (Muster Querencia Editor 0.2.0):
 
 - Texte der Oberfläche englisch im Code (msgid), Deutsch aus `po/de.po`
   mit dem bisherigen Wortlaut: Kontextmenü („_Copy“, „_Paste“,
@@ -94,8 +94,7 @@ Englisch und Deutsch über GNU gettext (G2-AH, Muster Querencia Editor 0.2.0):
   `data/org.querencia.Terminal.desktop.in` erzeugt (wie `msgfmt --desktop`).
 - AppStream-MetaInfo `data/org.querencia.Terminal.metainfo.xml` mit der
   alten ID `org.example.Querencia.Terminal` unter `<provides>`.
-- Lizenzkopf in `LICENSE` im README (Copyright „Querencia
-  Desktop contributors“).
+- Lizenzkopf (Copyright „Querencia Desktop contributors“).
 - Isolierte GUI-Prüfung: Sprache wählbar (`QT_LANGUAGE`), Zugriffstaste
   „Einfügen“ je Sprache.
 
