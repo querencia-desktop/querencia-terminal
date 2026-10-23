@@ -36,16 +36,22 @@ use crate::i18n::gettext;
 /// Die Regeln der klassischen Menüs, Zeile für Zeile wie in
 /// `querencia-panel/src/main.rs` (HMP-09), damit das Terminalmenü genauso
 /// aussieht wie Panel- und Desktopmenüs.
+///
+/// Fläche, Schrift und Rand als benannte Farben des Themas (`@menu_bg_color`,
+/// `@menu_fg_color`, `@borders`; hell #f5f4f2, #3c3c3c, #c7c2be wie bisher),
+/// damit das Menü dem Dunkelmodus folgt (QD-109). Pfeil und Trennlinie haben
+/// keine eigene Themenfarbe; sie sind aus diesen gemischt (hell #686868 statt
+/// #686463 und #dbd8d4 statt #dcd8d3, dunkel nahe den Werten des Panels).
 pub const MENU_CSS: &str = "\
 popover.querencia-menu { padding: 0; }
-popover.querencia-menu > contents { padding: 2px 0; border: 1px solid #c7c2be; border-radius: 0; box-shadow: none; background-color: #f5f4f2; color: #3c3c3c; }
+popover.querencia-menu > contents { padding: 2px 0; border: 1px solid @borders; border-radius: 0; box-shadow: none; background-color: @menu_bg_color; color: @menu_fg_color; }
 popover.querencia-menu .qmenu { min-width: 150px; }
 popover.querencia-menu .qmenu-item { min-height: 20px; padding: 1px 10px 1px 4px; border: 1px solid transparent; outline: none; }
-popover.querencia-menu .qmenu-item .qmenu-arrow { color: #686463; }
+popover.querencia-menu .qmenu-item .qmenu-arrow { color: mix(@menu_fg_color, @menu_bg_color, 0.24); }
 popover.querencia-menu .qmenu-item.qmenu-active { background-color: #f07746; background-image: linear-gradient(to bottom, #f8875d, #ea703d); border-color: #b36c4e; box-shadow: inset 0 1px #fd9975; color: #ffffff; }
 popover.querencia-menu .qmenu-item.qmenu-active .qmenu-arrow { color: #ffffff; }
 popover.querencia-menu .qmenu-item:disabled { color: @insensitive_fg_color; }
-popover.querencia-menu separator { margin: 3px 1px; min-height: 1px; background-color: #dcd8d3; }
+popover.querencia-menu separator { margin: 3px 1px; min-height: 1px; background-color: mix(@menu_bg_color, @borders, 0.57); }
 ";
 
 const MENU_CLASS: &str = "querencia-menu";
@@ -628,5 +634,10 @@ mod tests {
         // Hervorhebung wie Ambiance (Ubuntu 10.04): orange, weiße Schrift.
         assert!(MENU_CSS.contains(".qmenu-item.qmenu-active { background-color: #f07746;"));
         assert!(MENU_CSS.contains("color: #ffffff; }"));
+        // Fläche und Schrift folgen dem Thema (QD-109).
+        for fixed in ["#f5f4f2", "#3c3c3c", "#c7c2be", "#686463", "#dcd8d3"] {
+            assert!(!MENU_CSS.contains(fixed), "fester Hellwert {fixed}");
+        }
+        assert!(MENU_CSS.contains("background-color: @menu_bg_color; color: @menu_fg_color;"));
     }
 }

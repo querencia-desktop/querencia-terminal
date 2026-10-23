@@ -17,6 +17,36 @@ use crate::tabs;
 
 const APP_NAME: &str = "Querencia Terminal";
 
+/// Webseite von Querencia Desktop (Info-Dialog).
+pub const WEBSITE: &str = "https://querencialinux.org";
+
+/// Meldestelle (Hilfe → Fehler melden): Auswahl der Vorlagen für neue Issues.
+pub const REPORT_URL: &str = "https://github.com/querencia-desktop/querencia/issues/new/choose";
+
+/// Online-Hilfe in der Sprache der Oberfläche. Die Adresse steht im
+/// Katalog, damit jede Übersetzung ihre Sprachseite öffnet.
+pub fn online_help_url() -> String {
+    // TRANSLATORS: Adresse der Online-Hilfe (Hilfe → Online-Hilfe); nur den
+    // Sprachteil ersetzen, deutsch https://querencialinux.org/de/docs/.
+    gettext("https://querencialinux.org/en/docs/")
+}
+
+/// Öffnet `uri` im Standardprogramm (über das Portal, sonst über GIO). Ein
+/// Fehler erscheint nur auf stderr; das Terminal bleibt bedienbar.
+pub fn open_uri(parent: &impl IsA<gtk4::Window>, uri: &str) {
+    crate::clipboard::debug(&format!("Adresse öffnen: {uri}"));
+    let shown = uri.to_owned();
+    gtk4::UriLauncher::new(uri).launch(
+        Some(parent.as_ref()),
+        gio::Cancellable::NONE,
+        move |result| {
+            if let Err(err) = result {
+                eprintln!("querencia-terminal: {shown} nicht geöffnet: {err}");
+            }
+        },
+    );
+}
+
 /// Was geschlossen werden soll, wenn noch ein Programm läuft.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Closing {
@@ -217,7 +247,8 @@ pub fn shortcuts(parent: &impl IsA<gtk4::Window>) {
     close.grab_focus();
 }
 
-/// Hilfe → Info: Name, Version, Vorbild, Lizenz.
+/// Hilfe → Info: Name, Version, Stand (Alpha), Vorbild, Webseite, Lizenz
+/// und Urheber, wie in den anderen Querencia-Programmen.
 pub fn about(parent: &impl IsA<gtk4::Window>) {
     let window = modal_window(
         parent,
@@ -235,16 +266,37 @@ pub fn about(parent: &impl IsA<gtk4::Window>) {
         "<b><big>{APP_NAME} {}</big></b>",
         env!("CARGO_PKG_VERSION")
     ));
+    // TRANSLATORS: Info-Fenster, Entwicklungsstand unter Name und Version.
+    let stage = gtk4::Label::new(Some(&gettext("Alpha – not released for everyday use")));
     let text = gtk4::Label::new(Some(&gettext(
         "A terminal emulator for Querencia Desktop,\n\
          modelled on GNOME Terminal 2.x.",
     )));
     text.set_justify(gtk4::Justification::Center);
+    let website = gtk4::Label::new(None);
+    website.set_markup(&format!(
+        "<a href=\"{WEBSITE}\">{}</a>",
+        glib::markup_escape_text(WEBSITE)
+    ));
+    let w = window.downgrade();
+    website.connect_activate_link(move |_, uri| {
+        if let Some(w) = w.upgrade() {
+            open_uri(&w, uri);
+        }
+        glib::Propagation::Stop
+    });
     let license = gtk4::Label::new(Some(&gettext("License: GNU GPL, version 3 or later")));
     license.add_css_class("dim-label");
+    // TRANSLATORS: Info-Fenster, Urheberzeile; „contributors“ bleibt
+    // englisch wie im Lizenzkopf der Quellen.
+    let copyright = gtk4::Label::new(Some(&gettext("© 2026 Querencia Desktop contributors")));
+    copyright.add_css_class("dim-label");
     body.append(&name);
+    body.append(&stage);
     body.append(&text);
+    body.append(&website);
     body.append(&license);
+    body.append(&copyright);
     let close = gtk4::Button::with_mnemonic(&gettext("_Close"));
     window.set_child(Some(&content(&body, &button_row(&[&close]))));
     window.set_default_widget(Some(&close));
@@ -273,5 +325,23 @@ mod tests {
         assert_eq!(p, "Close this window?");
         assert!(s.contains("kill all of them"), "{s}");
         assert_eq!(b, "C_lose Window");
+    }
+
+    #[test]
+    fn addresses_of_querencia() {
+        assert_eq!(WEBSITE, "https://querencialinux.org");
+        assert_eq!(
+            REPORT_URL,
+            "https://github.com/querencia-desktop/querencia/issues/new/choose"
+        );
+        // Ohne Katalog (Tests) gilt die englische Seite.
+        assert_eq!(online_help_url(), "https://querencialinux.org/en/docs/");
+        let de = include_str!("../po/de.po");
+        assert!(de.contains(
+            "msgid \"https://querencialinux.org/en/docs/\"\nmsgstr \"https://querencialinux.org/de/docs/\""
+        ));
+        assert!(de.contains(
+            "msgid \"Alpha – not released for everyday use\"\nmsgstr \"Alpha – nicht für den Alltag freigegeben\""
+        ));
     }
 }

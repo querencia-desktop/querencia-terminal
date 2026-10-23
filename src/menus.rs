@@ -145,12 +145,24 @@ pub fn menus() -> Vec<Menu> {
         Menu {
             // TRANSLATORS: Menüleiste.
             title: gettext("_Help"),
-            sections: vec![vec![
-                // TRANSLATORS: Menü „Hilfe“, öffnet die Kürzelübersicht.
-                entry(gettext("_Keyboard Shortcuts"), "win.shortcuts", None),
-                // TRANSLATORS: Menü „Hilfe“.
-                entry(gettext("_About"), "win.about", None),
-            ]],
+            sections: vec![
+                vec![
+                    // TRANSLATORS: Menü „Hilfe“, öffnet die Hilfeseiten auf
+                    // querencialinux.org im Browser.
+                    entry(gettext("_Online Help"), "win.online-help", None),
+                    // TRANSLATORS: Menü „Hilfe“, öffnet die Kürzelübersicht.
+                    entry(gettext("_Keyboard Shortcuts"), "win.shortcuts", None),
+                ],
+                vec![
+                    // TRANSLATORS: Menü „Hilfe“, öffnet die Meldestelle für
+                    // Fehler im Browser.
+                    entry(gettext("_Report a Problem"), "win.report-problem", None),
+                ],
+                vec![
+                    // TRANSLATORS: Menü „Hilfe“.
+                    entry(gettext("_About"), "win.about", None),
+                ],
+            ],
         },
     ]
 }
@@ -220,6 +232,26 @@ mod tests {
         for menu in menus() {
             assert!(!bar_title(&menu.title).contains('_'), "{}", menu.title);
         }
+    }
+
+    #[test]
+    fn help_menu_with_online_help_and_report() {
+        let help = menus().pop().unwrap();
+        let actions: Vec<Vec<&str>> = help
+            .sections
+            .iter()
+            .map(|s| s.iter().map(|e| e.action).collect())
+            .collect();
+        assert_eq!(
+            actions,
+            [
+                vec!["win.online-help", "win.shortcuts"],
+                vec!["win.report-problem"],
+                vec!["win.about"],
+            ]
+        );
+        assert_eq!(german("_Online Help"), "_Online-Hilfe");
+        assert_eq!(german("_Report a Problem"), "_Fehler melden");
     }
 
     #[test]

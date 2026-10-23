@@ -24,7 +24,7 @@ use vte4::prelude::*;
 
 use crate::dialogs::{self, Closing};
 use crate::tabs::{self, TabBar};
-use crate::{clipboard, context_menu, menus, shell};
+use crate::{clipboard, context_menu, dnd, menus, shell};
 
 const TITLE: &str = "Querencia Terminal";
 
@@ -41,16 +41,24 @@ const TAB_LABEL_CHARS: i32 = 20;
 
 /// Stil von Menüleiste, Menüs und Reiterleiste: Ambiance-Farbwerte wie im
 /// Querencia Editor, nur für das Terminalfenster und seine Dialoge.
+///
+/// Flächen, Schrift und Ränder als benannte Farben des Themas
+/// (`@theme_bg_color`, `@theme_fg_color`, `@theme_base_color`,
+/// `@menu_bg_color`, `@borders`): unter Querencia-Klassisch hell genau die
+/// bisherigen Werte (#f2f1f0, #3c3c3c, #ffffff, #f5f4f2, #c7c2be), im dunklen
+/// Thema dessen Werte, ohne eigenen `@media`-Block und ohne Bindung an das
+/// Farbschema (QD-109). Nur die orange Hervorhebung ist fest; sie gilt hell
+/// wie dunkel.
 pub const WINDOW_CSS: &str = "\
-window.qt-window menubar { background-color: #f2f1f0; border-bottom: 1px solid #c7c2be; padding: 1px 2px; }
-window.qt-window menubar > item { padding: 3px 8px; border-radius: 0; color: #3c3c3c; }
+window.qt-window menubar { background-color: @theme_bg_color; border-bottom: 1px solid @borders; padding: 1px 2px; }
+window.qt-window menubar > item { padding: 3px 8px; border-radius: 0; color: @theme_fg_color; }
 window.qt-window menubar > item:hover, window.qt-window menubar > item:selected { background-image: linear-gradient(to bottom, #f6a179, #f07746); color: #1a1a1a; }
-window.qt-window popover.menu contents { border-radius: 0; padding: 2px 0; background-color: #f5f4f2; border: 1px solid #c7c2be; }
+window.qt-window popover.menu contents { border-radius: 0; padding: 2px 0; background-color: @menu_bg_color; border: 1px solid @borders; }
 window.qt-window popover.menu modelbutton { border-radius: 0; padding: 3px 16px; }
 window.qt-window popover.menu modelbutton:hover, window.qt-window popover.menu modelbutton:selected { background-image: linear-gradient(to bottom, #f6a179, #f07746); color: #1a1a1a; }
-window.qt-window notebook > header { background-color: #f2f1f0; border-bottom: 1px solid #c7c2be; }
+window.qt-window notebook > header { background-color: @theme_bg_color; border-bottom: 1px solid @borders; }
 window.qt-window notebook > header tab { padding: 2px 8px; border-radius: 0; }
-window.qt-window notebook > header tab:checked { background-color: #ffffff; box-shadow: inset 0 -2px #f07746; }
+window.qt-window notebook > header tab:checked { background-color: @theme_base_color; box-shadow: inset 0 -2px #f07746; }
 window.qt-window button.qt-tab-close { padding: 0; min-width: 16px; min-height: 16px; }
 window.qt-dialog button { border-radius: 2px; min-width: 80px; }
 window.qt-dialog label.qt-keys { font-weight: bold; }
@@ -198,7 +206,7 @@ impl TerminalWindow {
     /// Fensteraktionen der Menüleiste.
     fn install_actions(&self) {
         let window = &self.0.window;
-        let simple: [(&str, WindowAction); 12] = [
+        let simple: [(&str, WindowAction); 14] = [
             ("new-tab", |w| w.run(tabs::Command::NewTab)),
             ("close-tab", |w| w.run(tabs::Command::CloseTab)),
             ("close-window", |w| w.run(tabs::Command::CloseWindow)),
@@ -223,6 +231,12 @@ impl TerminalWindow {
             }),
             ("shortcuts", |w| dialogs::shortcuts(&w.0.window)),
             ("about", |w| dialogs::about(&w.0.window)),
+            ("online-help", |w| {
+                dialogs::open_uri(&w.0.window, &dialogs::online_help_url())
+            }),
+            ("report-problem", |w| {
+                dialogs::open_uri(&w.0.window, dialogs::REPORT_URL)
+            }),
         ];
         for (name, run) in simple {
             let action = gio::SimpleAction::new(name, None);
@@ -521,6 +535,7 @@ impl TerminalWindow {
         self.0.tabs.borrow_mut().push(tab.clone());
 
         self.install_context_menu(&terminal);
+        dnd::install(&terminal);
 
         let weak_tab = Rc::downgrade(&tab);
         terminal.connect_window_title_changed(move |_| {
@@ -713,6 +728,19 @@ impl TerminalWindow {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// Flächen und Ränder kommen aus dem Thema (hell wie bisher, dunkel
+    /// wie das Thema); feste Werte nur noch für die orange Hervorhebung.
+    #[test]
+    fn window_css_takes_surfaces_from_the_theme() {
+        for fixed in ["#f2f1f0", "#c7c2be", "#3c3c3c", "#f5f4f2", "#ffffff"] {
+            assert!(!WINDOW_CSS.contains(fixed), "fester Hellwert {fixed}");
+        }
+        assert!(!WINDOW_CSS.contains("@media"));
+        assert!(WINDOW_CSS.contains("menubar { background-color: @theme_bg_color;"));
+        assert!(WINDOW_CSS.contains("header { background-color: @theme_bg_color;"));
+        assert!(WINDOW_CSS.contains("tab:checked { background-color: @theme_base_color;"));
+    }
 
     #[test]
     fn window_css_is_scoped_to_the_terminal() {

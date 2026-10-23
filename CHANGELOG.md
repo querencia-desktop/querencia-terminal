@@ -1,5 +1,43 @@
 # Änderungen
 
+## 0.3.2 – 2026-10-22
+
+Dateien ins Terminal ziehen:
+
+- Dateien aus Querencia Files (oder einem anderen Programm) ins
+  Terminalfenster ziehen fügt ihre Pfade an der Schreibmarke ein, wie im
+  GNOME Terminal: jeder Pfad in einfachen Anführungszeichen und mit einem
+  Leerzeichen dahinter, mehrere nacheinander. Andere Adressen (z. B.
+  sftp://) bleiben als Adresse, gezogener Text wird unverändert eingefügt.
+- Eingefügt wird wie beim Einfügen aus der Zwischenablage (Bracketed Paste):
+  ein gezogener Text mit Zeilenumbruch wird nicht sofort ausgeführt.
+- Das Terminal nimmt nur „Kopieren“ an; Files verschiebt beim Ziehen ins
+  Terminal nie eine Datei.
+- Isolierte Prüfung `tools/dunkel-pruefung/szenario-ziehen.sh` mit Files.
+
+## 0.3.1 – 2026-10-22
+
+Dunkelmodus und Hilfe:
+
+- Menüleiste, Reiterleiste, die Menüs der Menüleiste und das Kontextmenü
+  folgen dem Dunkelmodus: Flächen, Schrift und Ränder kommen als benannte
+  Farben aus dem GTK-Thema (`@theme_bg_color`, `@theme_fg_color`,
+  `@theme_base_color`, `@menu_bg_color`, `@menu_fg_color`, `@borders`),
+  ohne eigenen `@media`-Block. Unter Querencia-Klassisch hell bleiben die
+  Flächen pixelgleich; nur Trennlinie und Untermenüpfeil im Kontextmenü
+  sind aus Themenfarben gemischt (#dbd8d4 statt #dcd8d3, #686868 statt
+  #686463). Der Terminalbereich selbst (VTE) ist unverändert.
+- Hilfe-Menü: neu „Online-Hilfe“ (https://querencialinux.org/de/docs/ bzw.
+  /en/docs/, je nach Sprache der Oberfläche) und „Fehler melden“
+  (Meldestelle auf GitHub); beide öffnen den Browser.
+- Info-Fenster: „Alpha – nicht für den Alltag freigegeben“, Verweis auf
+  https://querencialinux.org und „© 2026 Querencia Desktop contributors“.
+- MetaInfo: Homepage https://querencialinux.org.
+- 5 neue Texte englisch/deutsch (66 insgesamt).
+- Isolierte Prüfung hell/dunkel: `tools/dunkel-pruefung/` (eigenes HOME,
+  Farbschema per gsettings im Profil, Portal-Ersatz, Adress-Probe statt
+  Browser, Auswertung der Farben).
+
 ## 0.3.0 – 2026-10-20
 
 Reiter wie im GNOME Terminal 2.x:

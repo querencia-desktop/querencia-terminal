@@ -239,19 +239,21 @@ wait $((800 * F))"
 ergebnis "R13 Reiter → Vorheriger Reiter: Shell 1" aktiv_ist 1
 notiz "vorher aktiv: $AKTIV_VOR"
 
-# --- R14: Hilfe → Tastenkürzel
+# --- R14: Hilfe → Tastenkürzel (seit 0.3.1 zweiter Eintrag nach
+# „Online-Hilfe“, daher über die Zugriffstaste: de T, en K; ein Klick auf
+# den ersten Eintrag öffnete den Browser)
 q "mark R14"
+case $SPRACHE in en) TASTE_KUERZEL=k ;; *) TASTE_KUERZEL=t ;; esac
 qx "move $HILFE_X $MENUE_Y
 wait 200
 click
 wait $((800 * F))
-move $((HILFE_X + 40)) 73
-wait 300
-click
+key $TASTE_KUERZEL
 wait $((1200 * F))
 shot $OUT/r14-tastenkuerzel-$SPRACHE.png
 key Escape
 wait $((700 * F))"
+ergebnis "R14 Hilfe → Tastenkürzel öffnet die Übersicht" log_zaehlt 'Aktion shortcuts' 1
 
 # --- R15: Fenster schließen (Titelleiste) mit zwei Reitern und laufendem
 q "mark R15"

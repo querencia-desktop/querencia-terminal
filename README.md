@@ -51,8 +51,8 @@ Anwendungskennung (App-ID): `org.querencia.Terminal` (bis Oktober 2026
 
 | | |
 |---|---|
-| Version | 0.3.0 mit Reitern (Tag `terminal/0.3.0`); davor 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`) |
-| Letzte Prüfung | 20.10.2026 (0.3.0): 49 Unit-Tests, `i18n.py pruefen` (61 Texte); isolierte GUI-Prüfung Reiter (R1–R19) de/en bei 1024×768 und 1920×1080, Regression der 0.2.0-Szenarien (Kopieren/Einfügen 50 von 51, Sprache 9 von 9, Schließen 3 von 3) |
+| Version | 0.3.2 (Tag `terminal/0.3.2`: Dateien ins Terminal ziehen fügt ihre Pfade ein); davor 0.3.1 Dunkelmodus der Leisten und Hilfe-Menü (Tag `terminal/0.3.1`), 0.3.0 mit Reitern (Tag `terminal/0.3.0`), 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`) |
+| Letzte Prüfung | 22.10.2026 (0.3.2): 55 Unit-Tests, `i18n.py pruefen` (66 Texte); isoliert: Ziehen aus Querencia Files (eine und zwei Dateien, Quoting über die echte Shell) de/en, hell/dunkel mit drei Reitern de/en (`tools/dunkel-pruefung/`). 20.10.2026 (0.3.0): isolierte GUI-Prüfung Reiter (R1–R19) de/en bei 1024×768 und 1920×1080 |
 | Bekannte Lücken | P2 (mittlere Maustaste mit PRIMARY eines anderen Programms) offen; weitere in [docs/technik.md](docs/technik.md) |
 | Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22, VTE 0.84, Rust 1.93.1 |
 | Nicht getestet | andere Distributionen, HiDPI, Mehrmonitor, X11 |

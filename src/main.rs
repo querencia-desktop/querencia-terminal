@@ -5,7 +5,8 @@
 //! `menus.rs`). Die Terminalemulation übernimmt vollständig VTE.
 //!
 //! Kopieren und Einfügen (Strg+Umschalt+C/V, Umschalt+Einfg, Kontextmenü)
-//! wie im GNOME Terminal von GNOME 2: `clipboard.rs`, `context_menu.rs`.
+//! wie im GNOME Terminal von GNOME 2: `clipboard.rs`, `context_menu.rs`;
+//! Dateien und Text ins Terminal ziehen: `dnd.rs`.
 //!
 //! Texte über GNU gettext, msgid englisch, Deutsch aus `po/de.po`
 //! (`i18n.rs`).
@@ -13,6 +14,7 @@
 mod clipboard;
 mod context_menu;
 mod dialogs;
+mod dnd;
 mod i18n;
 mod menus;
 mod shell;
