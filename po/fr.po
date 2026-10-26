@@ -1,0 +1,325 @@
+# Querencia Terminal: französische Übersetzung.
+# Copyright (C) 2026 Querencia Desktop contributors
+# Diese Datei steht unter derselben Lizenz wie Querencia Terminal (GPL-3.0-or-later).
+# Begriffe nach der gemeinsamen Querencia-Begriffstabelle (GNOME-Wortwahl).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: querencia-terminal\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-10-26 22:32+0100\n"
+"Last-Translator: Querencia Desktop contributors\n"
+"Language-Team: Français (Querencia)\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel Name
+#: data/org.querencia.Terminal.desktop.in:11
+msgid "Querencia Terminal"
+msgstr "Querencia Terminal"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel GenericName
+#. TRANSLATORS: Reitertitel, solange die Shell keinen Titel setzt.
+#: data/org.querencia.Terminal.desktop.in:12 src/tabs.rs:203
+msgid "Terminal"
+msgstr "Terminal"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel Comment
+#: data/org.querencia.Terminal.desktop.in:13
+msgid "Use the command line"
+msgstr "Utiliser la ligne de commande"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel Keywords (Liste, Einträge mit ; trennen und abschließen)
+#: data/org.querencia.Terminal.desktop.in:19
+msgid "Shell;Prompt;Command;Command Line;Terminal;"
+msgstr "Shell;Invite;Commande;Ligne de commande;Terminal;"
+
+#. TRANSLATORS: Kontextmenü des Terminals. Die Zugriffstasten (_) der drei Zeilen müssen verschieden sein.
+#: src/context_menu.rs:80
+msgid "_Copy"
+msgstr "_Copier"
+
+#. TRANSLATORS: Kontextmenü des Terminals.
+#: src/context_menu.rs:82
+msgid "_Paste"
+msgstr "C_oller"
+
+#. TRANSLATORS: Kontextmenü des Terminals.
+#: src/context_menu.rs:84
+msgid "Select _All"
+msgstr "_Tout sélectionner"
+
+#. TRANSLATORS: Kontextmenü und Menü „Datei“; die Zugriffstaste darf im Kontextmenü nicht mit Kopieren/Einfügen/Alles auswählen zusammenfallen.
+#: src/context_menu.rs:88
+msgid "New _Tab"
+msgstr "_Nouvel onglet"
+
+#. TRANSLATORS: Kontextmenü und Menü „Datei“ (wie „New _Tab“).
+#: src/context_menu.rs:90
+msgid "C_lose Tab"
+msgstr "Fermer l’ong_let"
+
+#. TRANSLATORS: Adresse der Online-Hilfe (Hilfe → Online-Hilfe); nur den Sprachteil ersetzen, deutsch https://querencialinux.org/de/docs/.
+#: src/dialogs.rs:31
+msgid "https://querencialinux.org/en/docs/"
+msgstr "https://querencialinux.org/fr/docs/"
+
+#. TRANSLATORS: Nachfrage beim Schließen eines Reiters oder des Fensters mit nur einem Reiter.
+#: src/dialogs.rs:153
+msgid "Close this terminal?"
+msgstr "Fermer ce terminal ?"
+
+#: src/dialogs.rs:154
+msgid ""
+"There is still a process running in this terminal. Closing the terminal will kill it."
+msgstr ""
+"Un processus est encore en cours d’exécution dans ce terminal. Fermer le terminal l’arrêtera."
+
+#. TRANSLATORS: Knopf der Nachfrage „Close this terminal?“.
+#: src/dialogs.rs:159
+msgid "C_lose Terminal"
+msgstr "_Fermer le terminal"
+
+#. TRANSLATORS: Nachfrage beim Schließen eines Fensters mit mehreren Reitern.
+#: src/dialogs.rs:164
+msgid "Close this window?"
+msgstr "Fermer cette fenêtre ?"
+
+#: src/dialogs.rs:165
+msgid ""
+"There are still processes running in some terminals in this window. Closing the window will kill all of them."
+msgstr ""
+"Des processus sont encore en cours d’exécution dans certains terminaux de cette fenêtre. Fermer la fenêtre les arrêtera tous."
+
+#. TRANSLATORS: Knopf der Nachfrage „Close this window?“.
+#: src/dialogs.rs:170
+msgid "C_lose Window"
+msgstr "_Fermer la fenêtre"
+
+#: src/dialogs.rs:186
+msgid "_Cancel"
+msgstr "_Annuler"
+
+#: src/dialogs.rs:224
+msgid "Keyboard Shortcuts"
+msgstr "Raccourcis clavier"
+
+#: src/dialogs.rs:236 src/dialogs.rs:300
+msgid "_Close"
+msgstr "_Fermer"
+
+#. TRANSLATORS: Titel des Info-Fensters, {name} = „Querencia Terminal“.
+#: src/dialogs.rs:256
+#, no-c-format
+msgid "About {name}"
+msgstr "À propos de {name}"
+
+#. TRANSLATORS: Info-Fenster, Entwicklungsstand unter Name und Version.
+#: src/dialogs.rs:270
+msgid "Alpha – not released for everyday use"
+msgstr "Alpha – pas encore prêt pour un usage quotidien"
+
+#: src/dialogs.rs:271
+msgid ""
+"A terminal emulator for Querencia Desktop,\n"
+"modelled on GNOME Terminal 2.x."
+msgstr ""
+"Un émulateur de terminal pour Querencia Desktop,\n"
+"inspiré de GNOME Terminal 2.x."
+
+#: src/dialogs.rs:288
+msgid "License: GNU GPL, version 3 or later"
+msgstr "Licence : GNU GPL, version 3 ou ultérieure"
+
+#. TRANSLATORS: Info-Fenster, Urheberzeile; „contributors“ bleibt englisch wie im Lizenzkopf der Quellen.
+#: src/dialogs.rs:292
+msgid "© 2026 Querencia Desktop contributors"
+msgstr "© 2026 Querencia Desktop contributors"
+
+#. TRANSLATORS: Menüleiste. Die Zugriffstasten der fünf Menüs müssen verschieden sein.
+#: src/menus.rs:55
+msgid "_File"
+msgstr "_Fichier"
+
+#: src/menus.rs:70
+msgid "Close _Window"
+msgstr "Fermer la _fenêtre"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:79
+msgid "_Edit"
+msgstr "É_dition"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:102
+msgid "_View"
+msgstr "_Affichage"
+
+#. TRANSLATORS: Menü „Ansicht“, Häkchen: Reiterleiste auch mit nur einem Reiter zeigen.
+#: src/menus.rs:106
+msgid "Always Show _Tab Bar"
+msgstr "Toujours afficher la barre d’_onglets"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:113
+msgid "_Tabs"
+msgstr "_Onglets"
+
+#: src/menus.rs:118
+msgid "_Previous Tab"
+msgstr "Onglet _précédent"
+
+#: src/menus.rs:124
+msgid "_Next Tab"
+msgstr "Onglet _suivant"
+
+#: src/menus.rs:132
+msgid "Move Tab _Left"
+msgstr "Déplacer l’onglet vers la _gauche"
+
+#: src/menus.rs:138
+msgid "Move Tab _Right"
+msgstr "Déplacer l’onglet vers la _droite"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:147
+msgid "_Help"
+msgstr "Aid_e"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Hilfeseiten auf querencialinux.org im Browser.
+#: src/menus.rs:152
+msgid "_Online Help"
+msgstr "Aide en _ligne"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Kürzelübersicht.
+#: src/menus.rs:154
+msgid "_Keyboard Shortcuts"
+msgstr "_Raccourcis clavier"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Meldestelle für Fehler im Browser.
+#: src/menus.rs:159
+msgid "_Report a Problem"
+msgstr "_Signaler un problème"
+
+#. TRANSLATORS: Menü „Hilfe“.
+#: src/menus.rs:163
+msgid "_About"
+msgstr "À _propos"
+
+#. TRANSLATORS: steht hinter „Error:“, daher klein und ohne Punkt.
+#: src/shell.rs:70
+msgid "no executable shell found"
+msgstr "aucun shell exécutable trouvé"
+
+#. TRANSLATORS: {shell} ist der Pfad der Shell, {error} die Meldung von GLib; steht hinter „Error:“.
+#: src/shell.rs:106
+#, no-c-format
+msgid "{shell} could not be started: {error}"
+msgstr "impossible de démarrer {shell} : {error}"
+
+#. TRANSLATORS: rot vor der Meldung im Terminal, z. B. „Error: no executable shell found“.
+#: src/shell.rs:134
+msgid "Error:"
+msgstr "Erreur :"
+
+#. TRANSLATORS: Hilfe → Tastenkürzel, Tastennamen wie in der Kürzelübersicht von Querencia (Strg, Umschalt, Bild auf …).
+#: src/tabs.rs:255
+msgid "Ctrl+Shift+T"
+msgstr "Ctrl+Maj+T"
+
+#. TRANSLATORS: Hilfe → Tastenkürzel, Tastennamen wie in der Kürzelübersicht von Querencia (Strg, Umschalt, Bild auf …).
+#: src/tabs.rs:255 src/tabs.rs:270
+msgid "New tab"
+msgstr "Nouvel onglet"
+
+#: src/tabs.rs:256
+msgid "Ctrl+Shift+W"
+msgstr "Ctrl+Maj+W"
+
+#: src/tabs.rs:256 src/tabs.rs:269
+msgid "Close tab"
+msgstr "Fermer l’onglet"
+
+#: src/tabs.rs:257
+msgid "Ctrl+Shift+Q"
+msgstr "Ctrl+Maj+Q"
+
+#: src/tabs.rs:257
+msgid "Close window"
+msgstr "Fermer la fenêtre"
+
+#: src/tabs.rs:258
+msgid "Ctrl+Page Up"
+msgstr "Ctrl+Page préc."
+
+#: src/tabs.rs:258
+msgid "Previous tab"
+msgstr "Onglet précédent"
+
+#: src/tabs.rs:259
+msgid "Ctrl+Page Down"
+msgstr "Ctrl+Page suiv."
+
+#: src/tabs.rs:259
+msgid "Next tab"
+msgstr "Onglet suivant"
+
+#: src/tabs.rs:261
+msgid "Ctrl+Shift+Page Up"
+msgstr "Ctrl+Maj+Page préc."
+
+#: src/tabs.rs:262
+msgid "Move tab to the left"
+msgstr "Déplacer l’onglet vers la gauche"
+
+#: src/tabs.rs:265
+msgid "Ctrl+Shift+Page Down"
+msgstr "Ctrl+Maj+Page suiv."
+
+#: src/tabs.rs:266
+msgid "Move tab to the right"
+msgstr "Déplacer l’onglet vers la droite"
+
+#: src/tabs.rs:268
+msgid "Alt+1 … Alt+9"
+msgstr "Alt+1 … Alt+9"
+
+#: src/tabs.rs:268
+msgid "Switch to tab 1 … 9"
+msgstr "Aller à l’onglet 1 … 9"
+
+#: src/tabs.rs:269
+msgid "Middle click on a tab"
+msgstr "Clic du milieu sur un onglet"
+
+#: src/tabs.rs:270
+msgid "Double click on the tab bar"
+msgstr "Double-clic sur la barre d’onglets"
+
+#: src/tabs.rs:271
+msgid "Ctrl+Shift+C"
+msgstr "Ctrl+Maj+C"
+
+#: src/tabs.rs:271
+msgid "Copy"
+msgstr "Copier"
+
+#: src/tabs.rs:272
+msgid "Ctrl+Shift+V / Shift+Insert"
+msgstr "Ctrl+Maj+V / Maj+Inser"
+
+#: src/tabs.rs:272
+msgid "Paste"
+msgstr "Coller"
+
+#: src/tabs.rs:273
+msgid "Menu / Shift+F10"
+msgstr "Menu / Maj+F10"
+
+#: src/tabs.rs:273
+msgid "Context menu"
+msgstr "Menu contextuel"

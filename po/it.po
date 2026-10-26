@@ -1,0 +1,325 @@
+# Querencia Terminal: italienische Übersetzung.
+# Copyright (C) 2026 Querencia Desktop contributors
+# Diese Datei steht unter derselben Lizenz wie Querencia Terminal (GPL-3.0-or-later).
+# Begriffe nach der gemeinsamen Querencia-Begriffstabelle (GNOME-Wortwahl).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: querencia-terminal\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2026-10-26 22:32+0100\n"
+"Last-Translator: Querencia Desktop contributors\n"
+"Language-Team: Italiano (Querencia)\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel Name
+#: data/org.querencia.Terminal.desktop.in:11
+msgid "Querencia Terminal"
+msgstr "Querencia Terminal"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel GenericName
+#. TRANSLATORS: Reitertitel, solange die Shell keinen Titel setzt.
+#: data/org.querencia.Terminal.desktop.in:12 src/tabs.rs:203
+msgid "Terminal"
+msgstr "Terminale"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel Comment
+#: data/org.querencia.Terminal.desktop.in:13
+msgid "Use the command line"
+msgstr "Usa la riga di comando"
+
+#. TRANSLATORS: Desktop-Datei, Schlüssel Keywords (Liste, Einträge mit ; trennen und abschließen)
+#: data/org.querencia.Terminal.desktop.in:19
+msgid "Shell;Prompt;Command;Command Line;Terminal;"
+msgstr "Shell;Prompt;Comando;Riga di comando;Terminale;"
+
+#. TRANSLATORS: Kontextmenü des Terminals. Die Zugriffstasten (_) der drei Zeilen müssen verschieden sein.
+#: src/context_menu.rs:80
+msgid "_Copy"
+msgstr "_Copia"
+
+#. TRANSLATORS: Kontextmenü des Terminals.
+#: src/context_menu.rs:82
+msgid "_Paste"
+msgstr "_Incolla"
+
+#. TRANSLATORS: Kontextmenü des Terminals.
+#: src/context_menu.rs:84
+msgid "Select _All"
+msgstr "_Seleziona tutto"
+
+#. TRANSLATORS: Kontextmenü und Menü „Datei“; die Zugriffstaste darf im Kontextmenü nicht mit Kopieren/Einfügen/Alles auswählen zusammenfallen.
+#: src/context_menu.rs:88
+msgid "New _Tab"
+msgstr "_Nuova scheda"
+
+#. TRANSLATORS: Kontextmenü und Menü „Datei“ (wie „New _Tab“).
+#: src/context_menu.rs:90
+msgid "C_lose Tab"
+msgstr "C_hiudi scheda"
+
+#. TRANSLATORS: Adresse der Online-Hilfe (Hilfe → Online-Hilfe); nur den Sprachteil ersetzen, deutsch https://querencialinux.org/de/docs/.
+#: src/dialogs.rs:31
+msgid "https://querencialinux.org/en/docs/"
+msgstr "https://querencialinux.org/it/docs/"
+
+#. TRANSLATORS: Nachfrage beim Schließen eines Reiters oder des Fensters mit nur einem Reiter.
+#: src/dialogs.rs:153
+msgid "Close this terminal?"
+msgstr "Chiudere questo terminale?"
+
+#: src/dialogs.rs:154
+msgid ""
+"There is still a process running in this terminal. Closing the terminal will kill it."
+msgstr ""
+"In questo terminale c’è ancora un processo in esecuzione. Chiudendo il terminale verrà terminato."
+
+#. TRANSLATORS: Knopf der Nachfrage „Close this terminal?“.
+#: src/dialogs.rs:159
+msgid "C_lose Terminal"
+msgstr "_Chiudi terminale"
+
+#. TRANSLATORS: Nachfrage beim Schließen eines Fensters mit mehreren Reitern.
+#: src/dialogs.rs:164
+msgid "Close this window?"
+msgstr "Chiudere questa finestra?"
+
+#: src/dialogs.rs:165
+msgid ""
+"There are still processes running in some terminals in this window. Closing the window will kill all of them."
+msgstr ""
+"In alcuni terminali di questa finestra ci sono ancora processi in esecuzione. Chiudendo la finestra verranno tutti terminati."
+
+#. TRANSLATORS: Knopf der Nachfrage „Close this window?“.
+#: src/dialogs.rs:170
+msgid "C_lose Window"
+msgstr "_Chiudi finestra"
+
+#: src/dialogs.rs:186
+msgid "_Cancel"
+msgstr "_Annulla"
+
+#: src/dialogs.rs:224
+msgid "Keyboard Shortcuts"
+msgstr "Scorciatoie da tastiera"
+
+#: src/dialogs.rs:236 src/dialogs.rs:300
+msgid "_Close"
+msgstr "_Chiudi"
+
+#. TRANSLATORS: Titel des Info-Fensters, {name} = „Querencia Terminal“.
+#: src/dialogs.rs:256
+#, no-c-format
+msgid "About {name}"
+msgstr "Informazioni su {name}"
+
+#. TRANSLATORS: Info-Fenster, Entwicklungsstand unter Name und Version.
+#: src/dialogs.rs:270
+msgid "Alpha – not released for everyday use"
+msgstr "Alpha – non pronto per l’uso quotidiano"
+
+#: src/dialogs.rs:271
+msgid ""
+"A terminal emulator for Querencia Desktop,\n"
+"modelled on GNOME Terminal 2.x."
+msgstr ""
+"Un emulatore di terminale per Querencia Desktop,\n"
+"sul modello di GNOME Terminal 2.x."
+
+#: src/dialogs.rs:288
+msgid "License: GNU GPL, version 3 or later"
+msgstr "Licenza: GNU GPL, versione 3 o successiva"
+
+#. TRANSLATORS: Info-Fenster, Urheberzeile; „contributors“ bleibt englisch wie im Lizenzkopf der Quellen.
+#: src/dialogs.rs:292
+msgid "© 2026 Querencia Desktop contributors"
+msgstr "© 2026 Querencia Desktop contributors"
+
+#. TRANSLATORS: Menüleiste. Die Zugriffstasten der fünf Menüs müssen verschieden sein.
+#: src/menus.rs:55
+msgid "_File"
+msgstr "_File"
+
+#: src/menus.rs:70
+msgid "Close _Window"
+msgstr "Chiudi _finestra"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:79
+msgid "_Edit"
+msgstr "_Modifica"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:102
+msgid "_View"
+msgstr "_Visualizza"
+
+#. TRANSLATORS: Menü „Ansicht“, Häkchen: Reiterleiste auch mit nur einem Reiter zeigen.
+#: src/menus.rs:106
+msgid "Always Show _Tab Bar"
+msgstr "Mostra sempre la barra delle _schede"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:113
+msgid "_Tabs"
+msgstr "_Schede"
+
+#: src/menus.rs:118
+msgid "_Previous Tab"
+msgstr "Scheda _precedente"
+
+#: src/menus.rs:124
+msgid "_Next Tab"
+msgstr "Scheda _successiva"
+
+#: src/menus.rs:132
+msgid "Move Tab _Left"
+msgstr "Sposta scheda a si_nistra"
+
+#: src/menus.rs:138
+msgid "Move Tab _Right"
+msgstr "Sposta scheda a _destra"
+
+#. TRANSLATORS: Menüleiste.
+#: src/menus.rs:147
+msgid "_Help"
+msgstr "_Aiuto"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Hilfeseiten auf querencialinux.org im Browser.
+#: src/menus.rs:152
+msgid "_Online Help"
+msgstr "Aiuto in _linea"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Kürzelübersicht.
+#: src/menus.rs:154
+msgid "_Keyboard Shortcuts"
+msgstr "_Scorciatoie da tastiera"
+
+#. TRANSLATORS: Menü „Hilfe“, öffnet die Meldestelle für Fehler im Browser.
+#: src/menus.rs:159
+msgid "_Report a Problem"
+msgstr "Segnala un _problema"
+
+#. TRANSLATORS: Menü „Hilfe“.
+#: src/menus.rs:163
+msgid "_About"
+msgstr "_Informazioni"
+
+#. TRANSLATORS: steht hinter „Error:“, daher klein und ohne Punkt.
+#: src/shell.rs:70
+msgid "no executable shell found"
+msgstr "nessuna shell eseguibile trovata"
+
+#. TRANSLATORS: {shell} ist der Pfad der Shell, {error} die Meldung von GLib; steht hinter „Error:“.
+#: src/shell.rs:106
+#, no-c-format
+msgid "{shell} could not be started: {error}"
+msgstr "impossibile avviare {shell}: {error}"
+
+#. TRANSLATORS: rot vor der Meldung im Terminal, z. B. „Error: no executable shell found“.
+#: src/shell.rs:134
+msgid "Error:"
+msgstr "Errore:"
+
+#. TRANSLATORS: Hilfe → Tastenkürzel, Tastennamen wie in der Kürzelübersicht von Querencia (Strg, Umschalt, Bild auf …).
+#: src/tabs.rs:255
+msgid "Ctrl+Shift+T"
+msgstr "Ctrl+Maiusc+T"
+
+#. TRANSLATORS: Hilfe → Tastenkürzel, Tastennamen wie in der Kürzelübersicht von Querencia (Strg, Umschalt, Bild auf …).
+#: src/tabs.rs:255 src/tabs.rs:270
+msgid "New tab"
+msgstr "Nuova scheda"
+
+#: src/tabs.rs:256
+msgid "Ctrl+Shift+W"
+msgstr "Ctrl+Maiusc+W"
+
+#: src/tabs.rs:256 src/tabs.rs:269
+msgid "Close tab"
+msgstr "Chiudi scheda"
+
+#: src/tabs.rs:257
+msgid "Ctrl+Shift+Q"
+msgstr "Ctrl+Maiusc+Q"
+
+#: src/tabs.rs:257
+msgid "Close window"
+msgstr "Chiudi finestra"
+
+#: src/tabs.rs:258
+msgid "Ctrl+Page Up"
+msgstr "Ctrl+Pag su"
+
+#: src/tabs.rs:258
+msgid "Previous tab"
+msgstr "Scheda precedente"
+
+#: src/tabs.rs:259
+msgid "Ctrl+Page Down"
+msgstr "Ctrl+Pag giù"
+
+#: src/tabs.rs:259
+msgid "Next tab"
+msgstr "Scheda successiva"
+
+#: src/tabs.rs:261
+msgid "Ctrl+Shift+Page Up"
+msgstr "Ctrl+Maiusc+Pag su"
+
+#: src/tabs.rs:262
+msgid "Move tab to the left"
+msgstr "Sposta la scheda a sinistra"
+
+#: src/tabs.rs:265
+msgid "Ctrl+Shift+Page Down"
+msgstr "Ctrl+Maiusc+Pag giù"
+
+#: src/tabs.rs:266
+msgid "Move tab to the right"
+msgstr "Sposta la scheda a destra"
+
+#: src/tabs.rs:268
+msgid "Alt+1 … Alt+9"
+msgstr "Alt+1 … Alt+9"
+
+#: src/tabs.rs:268
+msgid "Switch to tab 1 … 9"
+msgstr "Passa alla scheda 1 … 9"
+
+#: src/tabs.rs:269
+msgid "Middle click on a tab"
+msgstr "Clic centrale su una scheda"
+
+#: src/tabs.rs:270
+msgid "Double click on the tab bar"
+msgstr "Doppio clic sulla barra delle schede"
+
+#: src/tabs.rs:271
+msgid "Ctrl+Shift+C"
+msgstr "Ctrl+Maiusc+C"
+
+#: src/tabs.rs:271
+msgid "Copy"
+msgstr "Copia"
+
+#: src/tabs.rs:272
+msgid "Ctrl+Shift+V / Shift+Insert"
+msgstr "Ctrl+Maiusc+V / Maiusc+Ins"
+
+#: src/tabs.rs:272
+msgid "Paste"
+msgstr "Incolla"
+
+#: src/tabs.rs:273
+msgid "Menu / Shift+F10"
+msgstr "Menu / Maiusc+F10"
+
+#: src/tabs.rs:273
+msgid "Context menu"
+msgstr "Menu contestuale"

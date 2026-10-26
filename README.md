@@ -27,8 +27,9 @@ the user interface is available in English and German.
   Alt+1 … Alt+9, Reiterleiste ab dem zweiten Reiter) und Menüleiste
   Datei | Bearbeiten | Ansicht | Reiter | Hilfe; Nachfrage beim Schließen,
   wenn noch ein Programm im Vordergrund läuft.
-- Oberfläche auf Englisch und Deutsch über GNU gettext (englische msgid,
-  `po/de.po`); Auswahl über `LANGUAGE`/`LANG`.
+- Oberfläche auf Englisch, Deutsch, Italienisch, Spanisch und Französisch über
+  GNU gettext (englische msgid, `po/de.po`, `it.po`, `es.po`, `fr.po`);
+  Auswahl über `LANGUAGE`/`LANG`.
 - Bewusst **noch nicht** Teil dieses Programms: Suche, Profile,
   Farbschemata, `-e`/`-x` (Befehl statt Shell), Einrichtung als
   Standardterminal.
@@ -51,7 +52,7 @@ Anwendungskennung (App-ID): `org.querencia.Terminal` (bis Oktober 2026
 
 | | |
 |---|---|
-| Version | 0.3.2 (Tag `terminal/0.3.2`: Dateien ins Terminal ziehen fügt ihre Pfade ein); davor 0.3.1 Dunkelmodus der Leisten und Hilfe-Menü (Tag `terminal/0.3.1`), 0.3.0 mit Reitern (Tag `terminal/0.3.0`), 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`) |
+| Version | 0.3.3 (Tag `terminal/0.3.3`: Italienisch, Spanisch, Französisch); davor 0.3.2 Dateien ins Terminal ziehen (Tag `terminal/0.3.2`), 0.3.1 Dunkelmodus der Leisten und Hilfe-Menü (Tag `terminal/0.3.1`), 0.3.0 mit Reitern (Tag `terminal/0.3.0`), 0.2.0 (Tags `terminal/0.2.0`, `terminal/0.2.0-1`) |
 | Letzte Prüfung | 22.10.2026 (0.3.2): 55 Unit-Tests, `i18n.py pruefen` (66 Texte); isoliert: Ziehen aus Querencia Files (eine und zwei Dateien, Quoting über die echte Shell) de/en, hell/dunkel mit drei Reitern de/en (`tools/dunkel-pruefung/`). 20.10.2026 (0.3.0): isolierte GUI-Prüfung Reiter (R1–R19) de/en bei 1024×768 und 1920×1080 |
 | Bekannte Lücken | P2 (mittlere Maustaste mit PRIMARY eines anderen Programms) offen; weitere in [docs/technik.md](docs/technik.md) |
 | Getestet auf | Ubuntu 26.04, labwc 0.9.8, GTK 4.22, VTE 0.84, Rust 1.93.1 |
