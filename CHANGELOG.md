@@ -1,5 +1,17 @@
 # Änderungen
 
+## 0.3.3 – 2026-10-26
+
+Italienisch, Spanisch, Französisch:
+
+- Neue Kataloge `po/it.po`, `po/es.po`, `po/fr.po` (je 66 Texte, vollständig),
+  Wortwahl nach GNOME Terminal der jeweiligen Sprache und der gemeinsamen
+  Querencia-Begriffstabelle; Zugriffstasten je Menü eindeutig, Tastennamen
+  landesüblich (Maiusc, Mayús, Maj), Online-Hilfe auf
+  querencialinux.org/it|es|fr/docs/.
+- Desktop-Datei und MetaInfo (Zusammenfassung, Beschreibung, Stichwörter)
+  auf Italienisch, Spanisch und Französisch.
+
 ## 0.3.2 – 2026-10-22
 
 Dateien ins Terminal ziehen:

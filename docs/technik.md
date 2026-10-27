@@ -103,7 +103,8 @@ nach stderr.
 ## Sprachen
 
 Seit 0.2.0 sind die Texte der Oberfläche englisch im Code (msgid) und
-deutsch in `po/de.po`, wie bei GNOME und Debian (Muster: Querencia Editor
+deutsch in `po/de.po`, seit 0.3.3 auch italienisch, spanisch und französisch
+(`po/it.po`, `po/es.po`, `po/fr.po`), wie bei GNOME und Debian (Muster: Querencia Editor
 0.2.0, `docs/i18n-muster.md` im Editor-Repo). Übersetzt sind das
 Kontextmenü („_Kopieren“, „_Einfügen“, „Alles _auswählen“ bzw. „_Copy“,
 „_Paste“, „Select _All“, Zugriffstasten je Sprache), die Startfehler im
@@ -111,7 +112,7 @@ Terminal und Comment/Keywords der Desktop-Datei. Nicht übersetzt sind der
 Name „Querencia Terminal“, der Fenstertitel und die Meldungen auf stderr.
 
 - Sprachwahl wie bei gettext üblich über `LANGUAGE`, `LC_ALL`,
-  `LC_MESSAGES`, `LANG`; ohne deutschen Katalog erscheint Englisch.
+  `LC_MESSAGES`, `LANG`; ohne passenden Katalog erscheint Englisch.
   `LANGUAGE` wirkt nicht, solange die Locale `C`/`POSIX` ist.
 - Die Kataloge `<lang>/LC_MESSAGES/querencia-terminal.mo` sucht das
   Programm in `<Ordner der Binary>/share/locale`, dann in
@@ -363,7 +364,7 @@ src/tabs.rs    Reitermodell: Befehle, Kürzel, Leiste, Titel, Arbeitsverzeichnis
 src/menus.rs   Menüleiste (Datei, Bearbeiten, Ansicht, Reiter, Hilfe)
 src/dialogs.rs Nachfrage beim Schließen, Tastenkürzel, Info
 src/i18n.rs    gettext: Textdomäne, Katalogsuche, Platzhalter
-po/            querencia-terminal.pot, de.po, LINGUAS
+po/            querencia-terminal.pot, de.po, it.po, es.po, fr.po, LINGUAS
 werkzeug/i18n.py     po-Pflege (pot, update, desktop, mo, pruefen)
 data/org.querencia.Terminal.desktop.in  Vorlage der Desktop-Datei (englisch)
 data/org.querencia.Terminal.desktop  Desktop-Datei mit [de] (Exec ohne Pfad)

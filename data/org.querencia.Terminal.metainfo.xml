@@ -2,7 +2,7 @@
 <!-- Querencia Terminal. ID = Desktop-ID = App-ID org.querencia.Terminal
      (Entscheidung 7); die alte ID steht unter <provides>, damit Kataloge den
      Eintrag org.example.Querencia.Terminal (bis appid-0.1) zuordnen.
-     Zweisprachig von Hand (xml:lang="de"), bis i18n.py MetaInfo lesen kann.
+     Übersetzungen von Hand (xml:lang de, es, fr, it), bis i18n.py MetaInfo lesen kann.
      Metadaten unter FSFAP, damit Kataloge sie frei übernehmen dürfen.
      Copyright (C) 2026 Querencia Desktop contributors -->
 <component type="desktop-application">
@@ -10,6 +10,9 @@
   <name>Querencia Terminal</name>
   <summary>Use the command line</summary>
   <summary xml:lang="de">Die Befehlszeile verwenden</summary>
+  <summary xml:lang="es">Usar la línea de comandos</summary>
+  <summary xml:lang="fr">Utiliser la ligne de commande</summary>
+  <summary xml:lang="it">Usa la riga di comando</summary>
   <metadata_license>FSFAP</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <developer id="org.querencia">
@@ -19,6 +22,9 @@
   <description>
     <p>Querencia Terminal is the terminal emulator of Querencia Desktop. It is built on VTE and offers tabs, copy and paste with Ctrl+Shift+C and Ctrl+Shift+V, a classic context menu, and inserts the paths of files dropped onto it.</p>
     <p xml:lang="de">Querencia Terminal ist der Terminalemulator von Querencia Desktop. Er baut auf VTE auf und bietet Reiter, Kopieren und Einfügen mit Strg+Umschalt+C und Strg+Umschalt+V, ein klassisches Kontextmenü und fügt die Pfade hineingezogener Dateien ein.</p>
+    <p xml:lang="es">Querencia Terminal es el emulador de terminal de Querencia Desktop. Está basado en VTE y ofrece pestañas, copiar y pegar con Ctrl+Mayús+C y Ctrl+Mayús+V, un menú contextual clásico, e inserta las rutas de los archivos que se arrastran sobre él.</p>
+    <p xml:lang="fr">Querencia Terminal est l’émulateur de terminal de Querencia Desktop. Basé sur VTE, il offre des onglets, le copier-coller avec Ctrl+Maj+C et Ctrl+Maj+V, un menu contextuel classique, et insère les chemins des fichiers qu’on y dépose.</p>
+    <p xml:lang="it">Querencia Terminal è l’emulatore di terminale di Querencia Desktop. Si basa su VTE e offre schede, copia e incolla con Ctrl+Maiusc+C e Ctrl+Maiusc+V, un menu contestuale classico e inserisce i percorsi dei file trascinati al suo interno.</p>
   </description>
   <url type="homepage">https://querencialinux.org</url>
   <launchable type="desktop-id">org.querencia.Terminal.desktop</launchable>
@@ -40,6 +46,18 @@
     <keyword xml:lang="de">Konsole</keyword>
     <keyword xml:lang="de">Befehlszeile</keyword>
     <keyword xml:lang="de">Terminal</keyword>
+    <keyword xml:lang="es">Shell</keyword>
+    <keyword xml:lang="es">Intérprete</keyword>
+    <keyword xml:lang="es">Línea de comandos</keyword>
+    <keyword xml:lang="es">Terminal</keyword>
+    <keyword xml:lang="fr">Shell</keyword>
+    <keyword xml:lang="fr">Invite</keyword>
+    <keyword xml:lang="fr">Ligne de commande</keyword>
+    <keyword xml:lang="fr">Terminal</keyword>
+    <keyword xml:lang="it">Shell</keyword>
+    <keyword xml:lang="it">Prompt</keyword>
+    <keyword xml:lang="it">Riga di comando</keyword>
+    <keyword xml:lang="it">Terminale</keyword>
   </keywords>
   <content_rating type="oars-1.1"/>
   <branding>
@@ -47,6 +65,7 @@
     <color type="primary" scheme_preference="dark">#B8532B</color>
   </branding>
   <releases>
+    <release version="0.3.3" date="2026-10-26"/>
     <release version="0.3.2" date="2026-10-22"/>
     <release version="0.3.1" date="2026-10-22"/>
     <release version="0.3.0" date="2026-10-20"/>
