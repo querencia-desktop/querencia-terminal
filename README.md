@@ -8,8 +8,9 @@ Anleitung auf <https://querencialinux.org>.
 
 *English summary:* A terminal emulator in the style of MATE Terminal and GNOME
 Terminal 2, built with GTK 4 and VTE. Part of Querencia Desktop, a classic
-GNOME-2-style desktop for Wayland. Alpha software; documentation is in German,
-the user interface is available in English and German.
+GNOME-2-style desktop for Wayland. Alpha software; the user interface is
+available in German, English, Italian, Spanish and French; documentation is in
+German.
 
 > **Alpha.** Stand 0.3.0: Fenster mit Menüleiste und Reitern, Shell,
 > Kopieren/Einfügen und Kontextmenü; Profile, Suche und Farbschemata fehlen
